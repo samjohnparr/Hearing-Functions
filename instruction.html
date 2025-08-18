@@ -61,6 +61,7 @@
   <span class="em">steeper lines sweep a wider pitch span</span>.
   For <span class="em">slope→pitch (S2P)</span>, you hear the <em>rate of change</em>:
   constant slope = constant tone; concave up = rising tone; concave down = falling tone.
+  Playback proceeds from the left end of the domain to the right: the first tone corresponds to x = x₀, the last tone to x = x₁.
 </p>
 
 <h2>Value → Pitch (V2P): Hear height / monotonicity</h2>
@@ -163,14 +164,14 @@ const S2P = [
   {
     id:"PRAC_S2P_cubic_full", label:"Cubic x³ (inflection at 0)",
     fn:(x)=>x**3, domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
-    listen:"U-shaped melody: high → low → high (minimum at x=0).",
+    listen:"V-shaped melody: high → low → high (minimum at x=0).",
     discuss:"Slope is 3x²: large at the ends, zero at x=0. Slope→pitch highlights the inflection—rate is lowest at the center, higher on both sides."
   },
   {
     id:"PRAC_S2P_logistic", label:"Logistic 1/(1+e^{-x}) (S-curve)",
     fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
     listen:"Bell-shaped melody: low → high → low (peak in the middle).",
-    discuss:"The slope peaks at the inflection (x≈0) and is smaller at both ends. Slope→pitch makes the ‘fastest change’ moment audible."
+    discuss:"The function is increasing across the whole domain, but its slope is largest near x≈0 and smaller near the ends. The tone falls at the end because the rate of change (slope) is decreasing toward 0, not because y is going down."
   },
 ];
 
