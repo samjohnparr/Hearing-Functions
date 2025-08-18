@@ -58,7 +58,7 @@
 </div>
 
 <h1>Hearing Functions: Instructional Examples</h1>
-<p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John Parr</a></p>
+<p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John Parreño</a></p>
 
 <p class="note">
   All clips use the same timbre, tempo, and pitch range (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
@@ -162,13 +162,13 @@ const S2P = [
   },
   {
     id:"PRAC_S2P_log_wider", label:"Log(x) (concave down)",
-    fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
+    fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
     listen:"Tone falls steadily (highest at the start, lowest at the end).",
     discuss:"Slope f′(x)=1/x is positive but decreases as x increases ⇒ slope→pitch falls. Concave down means the rate of change is decreasing."
   },
   {
     id:"PRAC_S2P_cubic_full", label:"Cubic x³ (inflection at 0)",
-    fn:(x)=>x**3, domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
+    fn:(x)=>-(x**3), domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
     listen:"High → low → high (lowest at the center).",
     discuss:"Slope f′(x)=3x² is large at both ends and 0 at x=0. Slope→pitch highlights the inflection—rate is lowest in the middle, higher on both sides."
   },
