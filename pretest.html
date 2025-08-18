@@ -44,25 +44,26 @@
 /* ======= CONFIG: 6-item Pretest (Form A) ======= */
 const PROMPTS = [
   // V2P (value -> pitch)
-  { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow",  label:"V2P: linear ↑ (gentle)" },
-  { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast",  label:"V2P: linear ↓ (steep)"  },
-  { id:"V2P_constant",         src:"audio/V2P_constant.wav",         correct:"g_const",         label:"V2P: constant"         },
+  { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow",  label:"" },
+  { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast",  label:"" },
+  { id:"V2P_constant",         src:"audio/V2P_constant.wav",         correct:"g_const",         label:"" },
   // S2P (slope -> pitch)
-  { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", correct:"g_linear", label:"S2P: linear (constant slope)" },
-  { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad",   label:"S2P: quadratic (concave up)" },
-  { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt",   label:"S2P: √x (concave down)"     },
+  { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", correct:"g_linear", label:"" },
+  { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad",   label:"" },
+  { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt_mir",   label:"" },
 ];
 
 const FIGURES = [
-  // V2P figures (match new audio slopes)
+  // V2P figures
   { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x" },
   { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x" },
   { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2" },
 
   // S2P figures
-  { id:"g_linear", fn:(x)=>0.6*x,                        domain:[-5,5], caption:"linear (slope constant)" },
-  { id:"g_quad",   fn:(x)=>x*x,                          domain:[0,4],  caption:"quadratic (concave up)"  },
-  { id:"g_sqrt",   fn:(x)=>Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"sqrt (concave down)"     },
+  { id:"g_linear",   fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (slope constant)" },
+  { id:"g_quad",     fn:(x)=>x*x,                           domain:[0,4],  caption:"quadratic (concave up)"  },
+  // mirrored vertically so falling S2P tone visually matches a falling curve
+  { id:"g_sqrt_mir", fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x"                 },
 ];
 
 /* ======= QUIZ ENGINE (no server) ======= */
@@ -114,7 +115,7 @@ function drawGraph(el, fn, domain, caption){
   const selects=[];
   items.forEach((it, idx)=>{
     const card=document.createElement("div"); card.className="item";
-    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}:</span> <span class="muted">${it.label}</span>`;
+    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}</span>`;
     const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
     const sel=document.createElement("select");
     sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
@@ -151,7 +152,7 @@ function drawGraph(el, fn, domain, caption){
       const ok = (chosen===correctLetter);
       if(ok) correct++;
       const mark=document.createElement("span"); mark.className = ok ? "ok" : "bad"; mark.style.marginLeft="8px"; mark.textContent = ok ? "✔" : "✖"; s.sel.after(mark);
-      rows.push(["pre", s.item.label, s.item.id, chosen, correctLetter, ok]);
+      rows.push(["pre", s.item.id, s.item.id, chosen, correctLetter, ok]);
       s.sel.disabled=true;
     });
     out.textContent=` Score: ${correct} / ${selects.length}`;

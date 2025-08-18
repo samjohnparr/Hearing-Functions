@@ -44,25 +44,25 @@
 /* ======= CONFIG: 6-item Posttest (Form B) ======= */
 const PROMPTS = [
   // V2P
-  { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast",  label:"V2P: linear ↑ (steep)" },
-  { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow",  label:"V2P: linear ↓ (gentle)" },
-  { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast",       label:"V2P: exponential ↑"   },
+  { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast",  label:"" },
+  { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow",  label:"" },
+  { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast",       label:"" },
   // S2P
-  { id:"S2P_log_concave_down", src:"audio/S2P_log_concave_down.wav", correct:"g_log",        label:"S2P: log (concave down)" },
-  { id:"S2P_cubic_concave_up", src:"audio/S2P_cubic_concave_up.wav", correct:"g_cubic_pos",  label:"S2P: cubic on [0,2] (concave up)" },
-  { id:"S2P_cubic_concave_down", src:"audio/S2P_cubic_concave_down.wav", correct:"g_cubic_neg", label:"S2P: cubic on [-2,0] (concave down)" },
+  { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir",    label:"" },
+  { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos",  label:"" },
+  { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg",  label:"" },
 ];
 
 const FIGURES = [
-  // V2P figures (match new audio slopes)
-  { id:"g_lin_pos_fast", fn:(x)=>1.20*x,      domain:[-5,5], caption:"y = 1.2x" },
-  { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,     domain:[-5,5], caption:"y = -0.2x" },
-  { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5)" },
+  // V2P figures
+  { id:"g_lin_pos_fast", fn:(x)=>1.20*x,                 domain:[-5,5], caption:"y = 1.2x" },
+  { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,                domain:[-5,5], caption:"y = -0.2x" },
+  { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
 
-  // S2P figures
-  { id:"g_log",       fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"log (concave down)" },
-  { id:"g_cubic_pos", fn:(x)=>x**3,                        domain:[0,2],   caption:"cubic on [0,2]" },
-  { id:"g_cubic_neg", fn:(x)=>x**3,                        domain:[-2,0],  caption:"cubic on [-2,0]" },
+  // S2P figures (log mirrored vertically to match falling tone visually)
+  { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x)" },
+  { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2]" },
+  { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
 ];
 
 /* ======= QUIZ ENGINE (same as pretest) ======= */
@@ -114,7 +114,7 @@ function drawGraph(el, fn, domain, caption){
   const selects=[];
   items.forEach((it, idx)=>{
     const card=document.createElement("div"); card.className="item";
-    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}:</span> <span class="muted">${it.label}</span>`;
+    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}</span>`;
     const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
     const sel=document.createElement("select");
     sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
@@ -151,7 +151,7 @@ function drawGraph(el, fn, domain, caption){
       const ok = (chosen===correctLetter);
       if(ok) correct++;
       const mark=document.createElement("span"); mark.className = ok ? "ok" : "bad"; mark.style.marginLeft="8px"; mark.textContent = ok ? "✔" : "✖"; s.sel.after(mark);
-      rows.push(["post", s.item.label, s.item.id, chosen, correctLetter, ok]);
+      rows.push(["post", s.item.id, s.item.id, chosen, correctLetter, ok]);
       s.sel.disabled=true;
     });
     out.textContent=` Score: ${correct} / ${selects.length}`;
