@@ -21,7 +21,19 @@
   .ok{color:#0a7a26}
   .bad{color:#c00}
   .muted{color:#666;font-size:.92rem}
+
+  /* Home button */
+  .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
+  .homebtn{
+    display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
+    background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
+  }
+  .homebtn:hover{background:#eee;}
 </style>
+
+<div class="homebar">
+  <a class="homebtn" href="index.html">🏠 Home</a>
+</div>
 
 <h1>Hearing Functions — Pretest (Part A)</h1>
 <p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
@@ -30,7 +42,6 @@
 
 <script>
 /* ======= CONFIG: 6-item Pretest (Form A) ======= */
-/* Requires 6 audio files in /audio with these exact names. */
 const PROMPTS = [
   // V2P (value -> pitch)
   { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow",  label:"V2P: linear ↑ (gentle)" },
@@ -48,12 +59,11 @@ const FIGURES = [
   { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x" },
   { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2" },
 
-  // S2P figures (unchanged)
+  // S2P figures
   { id:"g_linear", fn:(x)=>0.6*x,                        domain:[-5,5], caption:"linear (slope constant)" },
   { id:"g_quad",   fn:(x)=>x*x,                          domain:[0,4],  caption:"quadratic (concave up)"  },
   { id:"g_sqrt",   fn:(x)=>Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"sqrt (concave down)"     },
 ];
-
 
 /* ======= QUIZ ENGINE (no server) ======= */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -73,7 +83,6 @@ function drawGraph(el, fn, domain, caption){
   const W=160,H=120, NS="http://www.w3.org/2000/svg";
   const svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
   const {xs,ys,ymin,ymax}=sampleY(fn, domain, 200);
-  // axes
   if(domain[0]<=0 && domain[1]>=0){
     const x0=mapX(0,domain[0],domain[1],W);
     const l=document.createElementNS(NS,"line"); l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
@@ -82,7 +91,6 @@ function drawGraph(el, fn, domain, caption){
     const y0=mapY(0,ymin,ymax,H);
     const l=document.createElementNS(NS,"line"); l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
   }
-  // path
   let d=""; for(let i=0;i<xs.length;i++){const X=mapX(xs[i],domain[0],domain[1],W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);}
   const path=document.createElementNS(NS,"path"); path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2"); svg.appendChild(path);
   const cap=document.createElement("div"); cap.className="muted"; cap.style.textAlign="center"; cap.style.marginTop="4px"; cap.textContent=caption||"";

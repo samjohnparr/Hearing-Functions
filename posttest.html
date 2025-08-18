@@ -21,7 +21,19 @@
   .ok{color:#0a7a26}
   .bad{color:#c00}
   .muted{color:#666;font-size:.92rem}
+
+  /* Home button */
+  .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
+  .homebtn{
+    display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
+    background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
+  }
+  .homebtn:hover{background:#eee;}
 </style>
+
+<div class="homebar">
+  <a class="homebtn" href="index.html">🏠 Home</a>
+</div>
 
 <h1>Hearing Functions — Posttest (Part B)</h1>
 <p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
@@ -47,12 +59,11 @@ const FIGURES = [
   { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,     domain:[-5,5], caption:"y = -0.2x" },
   { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5)" },
 
-  // S2P figures (unchanged)
+  // S2P figures
   { id:"g_log",       fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"log (concave down)" },
   { id:"g_cubic_pos", fn:(x)=>x**3,                        domain:[0,2],   caption:"cubic on [0,2]" },
   { id:"g_cubic_neg", fn:(x)=>x**3,                        domain:[-2,0],  caption:"cubic on [-2,0]" },
 ];
-
 
 /* ======= QUIZ ENGINE (same as pretest) ======= */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}

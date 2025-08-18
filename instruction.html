@@ -18,7 +18,7 @@
   h1{ font-size:1.8rem; margin:.2rem 0 .6rem }
   h2{ font-size:1.25rem; margin:1.6rem 0 .6rem }
   .note{ color:#555; font-size:1rem; margin-bottom:14px }
-  .stack{ display:block }          /* single column */
+  .stack{ display:block }
   .card{
     border:1px solid #ddd; border-radius:14px; background:#fafafa;
     padding:14px; margin:14px 0;
@@ -40,10 +40,20 @@
   audio{ width:100%; margin:8px 0 }
   .mini{ font-size:1rem; color:#333; margin:.35rem 0 }
   .em{ font-weight:600 }
-  .back{ font-size:.95rem; color:#356; text-decoration:none }
+
+  /* Home button */
+  .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
+  .homebtn{
+    display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
+    background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
+  }
+  .homebtn:hover{background:#eee;}
 </style>
 
-<a class="back" href="index.html">← Back to Home</a>
+<div class="homebar">
+  <a class="homebtn" href="index.html">🏠 Home</a>
+</div>
+
 <h1>Hearing Functions — Instructional Examples</h1>
 <p class="note">
   All clips use the same timbre, tempo, and pitch range (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
@@ -60,7 +70,7 @@
 <div id="s2p" class="stack"></div>
 
 <script>
-// ---------- plotting helpers (single column, larger figures) ----------
+// ---------- plotting helpers ----------
 function sampleY(fn, domain, N=400){
   const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
   const ys=xs.map(fn);
@@ -83,7 +93,6 @@ function drawGraph(container, fn, domain, caption){
 
   const {xs,ys,ymin,ymax,x0,x1}=sampleY(fn, domain, 400);
 
-  // axes
   if(x0<=0 && x1>=0){
     const xz=mapX(0,x0,x1,W);
     const v=document.createElementNS(NS,"line");
@@ -97,7 +106,6 @@ function drawGraph(container, fn, domain, caption){
     h.setAttribute("stroke","#bbb"); h.setAttribute("stroke-width","1.2"); svg.appendChild(h);
   }
 
-  // function path
   let d=""; for(let i=0;i<xs.length;i++){
     const X=mapX(xs[i],x0,x1,W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);
   }
@@ -111,7 +119,7 @@ function drawGraph(container, fn, domain, caption){
   container.appendChild(wrap);
 }
 
-// ---------- examples (match PRAC_*.wav filenames you generated) ----------
+// ---------- examples (match PRAC_*.wav filenames) ----------
 const V2P = [
   {
     id:"PRAC_V2P_linear_pos_very_gentle", label:"Linear ↑ (very gentle)",
@@ -166,7 +174,7 @@ const S2P = [
   },
 ];
 
-// ---------- render (single column) ----------
+// ---------- render ----------
 function makeCard(entry, mapping, mount){
   const card=document.createElement("div"); card.className="card";
   const head=document.createElement("div"); head.className="head";
