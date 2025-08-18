@@ -20,8 +20,8 @@
   .author{ margin:.1rem 0 1rem; color:#444; font-size:1rem; }
   .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
   .author a:hover{ text-decoration:underline; }
-  .note{ color:#555; font-size:1rem; margin-bottom:14px }
-  .stack{ display:block }          /* single column */
+  .note{ color:#333; font-size:1rem; margin-bottom:14px }
+  .stack{ display:block }
   .card{
     border:1px solid #ddd; border-radius:14px; background:#fafafa;
     padding:14px; margin:14px 0;
@@ -61,18 +61,19 @@
 <p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a></p>
 
 <p class="note">
-  All clips use the same timbre, tempo, and pitch range (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
-  Playback proceeds from the left end of the domain to the right end:
-  the first tone corresponds to <em>x = x₀</em>, the last tone to <em>x = x₁</em>.
-  For <span class="em">value→pitch (V2P)</span>, pitch maps to the function’s value <em>f(x)</em>, so steeper lines sweep a wider pitch span under a fixed scale.
-  For <span class="em">slope→pitch (S2P)</span>, pitch maps to the signed slope <em>f′(x)</em>:
-  constant slope = constant tone; concave up = rising tone (slope increases); concave down = falling tone (slope decreases).
+  We’re turning graphs into sound. Each short “beep” walks from the <em>left</em> of the graph to the <em>right</em>.
+  <br><br>
+  Two ways we make sound:
+  <br>• <span class="em">Value → Pitch (V2P)</span>: Higher graph = higher note. Lower graph = lower note.
+  <br>• <span class="em">Slope → Pitch (S2P)</span>: Steeper = higher note. Flatter = lower note. (You’re “hearing” how fast the graph is changing.)
+  <br><br>
+  All clips use the same instrument, speed, and pitch range.
 </p>
 
-<h2>Value → Pitch (V2P): Hear height / monotonicity</h2>
+<h2>Value → Pitch (V2P): Hear the height of the graph</h2>
 <div id="v2p" class="stack"></div>
 
-<h2>Slope → Pitch (S2P): Hear rate / concavity</h2>
+<h2>Slope → Pitch (S2P): Hear how fast the graph is changing</h2>
 <div id="s2p" class="stack"></div>
 
 <script>
@@ -125,58 +126,58 @@ function drawGraph(container, fn, domain, caption){
   container.appendChild(wrap);
 }
 
-/* ---------- examples (match PRAC_*.wav filenames you generated) ---------- */
+/* ---------- examples (match your PRAC_*.wav filenames) ---------- */
 const V2P = [
   {
-    id:"PRAC_V2P_linear_pos_very_gentle", label:"Linear ↑ (very gentle)",
+    id:"PRAC_V2P_linear_pos_very_gentle", label:"Line going up (gentle)",
     fn:(x)=>0.10*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_pos_very_gentle.wav",
-    listen:"A slow, steady rise across time (small pitch span).",
-    discuss:"Constant positive slope but small magnitude ⇒ value increases slowly. With a fixed vertical scale, gentle lines sweep a narrower pitch range than steep lines."
+    listen:"The note slowly goes up.",
+    discuss:"The graph climbs a little each step, so the pitch also climbs a little each step."
   },
   {
-    id:"PRAC_V2P_linear_neg_very_steep", label:"Linear ↓ (very steep)",
+    id:"PRAC_V2P_linear_neg_very_steep", label:"Line going down (very steep)",
     fn:(x)=>-1.30*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_neg_very_steep.wav",
-    listen:"A strong downward sweep (wide pitch span).",
-    discuss:"Large negative slope: value drops quickly. The fixed scale makes the rapid decrease clearly audible."
+    listen:"The note drops fast and by a lot.",
+    discuss:"The graph falls quickly, so the sound falls quickly too."
   },
   {
-    id:"PRAC_V2P_exponential_slow", label:"Exponential ↑ (slow acceleration)",
+    id:"PRAC_V2P_exponential_slow", label:"Exponential up (starts slow, then faster)",
     fn:(x)=>Math.pow(2, x/3.0), domain:[-4,4], src:"audio/PRAC_V2P_exponential_slow.wav",
-    listen:"Rising contour; the rise feels slightly faster near the end.",
-    discuss:"Values increase slowly at first then faster—concave up. In V2P we hear height; the end sounds higher because values grow faster there."
+    listen:"Starts rising slowly, then rises faster near the end.",
+    discuss:"The graph starts low and speeds up as it goes right, so the pitch does the same."
   },
   {
-    id:"PRAC_V2P_exponential_decay", label:"Exponential decay ↓",
+    id:"PRAC_V2P_exponential_decay", label:"Exponential down (fast drop, then levels)",
     fn:(x)=>Math.pow(2, -x/1.8), domain:[-4,4], src:"audio/PRAC_V2P_exponential_decay.wav",
-    listen:"A quick drop that levels off.",
-    discuss:"Values decrease rapidly then flatten—concave up but decreasing. In V2P this is a falling melody that slows its descent."
+    listen:"Drops quickly at first, then levels off.",
+    discuss:"The graph falls a lot at the start and then flattens, so the pitch falls then steadies."
   },
 ];
 
 const S2P = [
   {
-    id:"PRAC_S2P_quadratic_shifted", label:"Quadratic (concave up), vertex at x=1",
+    id:"PRAC_S2P_quadratic_shifted", label:"Parabola with lowest point at x=1",
     fn:(x)=>(x-1)**2, domain:[-1,3], src:"audio/PRAC_S2P_quadratic_shifted.wav",
-    listen:"Tone rises steadily from start to end; it crosses mid-pitch near the vertex.",
-    discuss:"f′(x)=2(x−1) increases from −2 to +4 across the domain. Slope→pitch uses the signed slope, so pitch increases as the slope increases. At x=1 the slope is 0, so the pitch is around the middle of the clip’s range (not the minimum)."
+    listen:"The note keeps going up from start to finish.",
+    discuss:"We’re listening to how fast the graph changes. On the left it’s changing downward, then it changes more and more upward, so the pitch rises across the clip."
   },
   {
-    id:"PRAC_S2P_log_wider", label:"Log(x) (concave down)",
+    id:"PRAC_S2P_log_wider", label:"Log shape going down",
     fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
-    listen:"Tone falls steadily (highest at the start, lowest at the end).",
-    discuss:"Slope f′(x)=1/x is positive but decreases as x increases ⇒ slope→pitch falls. Concave down means the rate of change is decreasing."
+    listen:"The note slowly goes down over time.",
+    discuss:"At the start the graph changes more; later it changes less. Less change = lower pitch, so the sound gently falls."
   },
   {
-    id:"PRAC_S2P_cubic_full", label:"Cubic x³ (inflection at 0)",
+    id:"PRAC_S2P_cubic_full", label:"Cubic S-curve (flattest in the middle)",
     fn:(x)=>-(x**3), domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
-    listen:"High → low → high (lowest at the center).",
-    discuss:"Slope f′(x)=3x² is large at both ends and 0 at x=0. Slope→pitch highlights the inflection—rate is lowest in the middle, higher on both sides."
+    listen:"Low → higher in the middle → low again.",
+    discuss:"The graph changes the least in the middle and the most near the ends. We hear that as the pitch peaking in the middle and dipping near both ends."
   },
   {
-    id:"PRAC_S2P_logistic", label:"Logistic 1/(1+e^{-x}) (S-curve)",
+    id:"PRAC_S2P_logistic", label:"Logistic (fastest in the middle)",
     fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
-    listen:"Low → high → low (peak in the middle).",
-    discuss:"The function increases everywhere, but its slope peaks near x≈0 and shrinks toward 0 near the ends. Because S2P maps the signed slope, the tone is low at both ends and highest near the midpoint."
+    listen:"Low → high → low (highest in the middle).",
+    discuss:"This graph changes slow → fast → slow. Fast change = higher pitch, so you hear the peak in the middle."
   },
 ];
 
@@ -188,14 +189,14 @@ function makeCard(entry, mapping, mount){
   const fig=document.createElement("div");
   drawGraph(fig, entry.fn, entry.domain, `y = f(x) on [${entry.domain[0]}, ${entry.domain[1]}]`);
   const player=document.createElement("audio"); player.controls=true; player.src=entry.src;
-  const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What to listen for:</span> ${entry.listen}`;
-  const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Math discussion:</span> ${entry.discuss}`;
+  const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What you'll hear:</span> ${entry.listen}`;
+  const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Why it sounds like that:</span> ${entry.discuss}`;
   card.appendChild(head); card.appendChild(fig); card.appendChild(player); card.appendChild(listen); card.appendChild(discuss);
   mount.appendChild(card);
 }
 
 const v2p = document.getElementById("v2p");
 const s2p = document.getElementById("s2p");
-V2P.forEach(e=>makeCard(e,"V2P (value→pitch)", v2p));
-S2P.forEach(e=>makeCard(e,"S2P (slope→pitch)", s2p));
+V2P.forEach(e=>makeCard(e,"V2P (value → pitch)", v2p));
+S2P.forEach(e=>makeCard(e,"S2P (slope → pitch)", s2p));
 </script>
