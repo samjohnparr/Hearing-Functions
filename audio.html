@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Hearing Functions — WAV Player</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:800px;margin:2rem auto;padding:0 1rem;line-height:1.4}
+  h1{font-size:1.6rem;margin:.2rem 0}
+  .card{border:1px solid #ddd;padding:12px;border-radius:10px;margin:10px 0;background:#fafafa}
+  audio{width:100%}
+  .small{color:#555;font-size:.9rem}
+</style>
+
+<h1>Hearing Functions — Identical WAV Stimuli</h1>
+<p class="small">Spec: sine tone, 40 steps, 0.20 s per step, 0.02 s gaps, 220–880 Hz (5–95% clip).</p>
+
+<div class="card"><strong>V2P linear ↑</strong><br>
+  <audio controls src="audio/V2P_linear_increasing.wav"></audio></div>
+
+<div class="card"><strong>V2P linear ↓</strong><br>
+  <audio controls src="audio/V2P_linear_decreasing.wav"></audio></div>
+
+<div class="card"><strong>V2P exponential ↑</strong><br>
+  <audio controls src="audio/V2P_exponential_increasing.wav"></audio></div>
+
+<div class="card"><strong>S2P quadratic (concave up)</strong><br>
+  <audio controls src="audio/S2P_quadratic_concave_up.wav"></audio></div>
+
+<div class="card"><strong>S2P sqrt (concave down)</strong><br>
+  <audio controls src="audio/S2P_sqrt_concave_down.wav"></audio></div>
