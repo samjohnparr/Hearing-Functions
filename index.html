@@ -1,4 +1,40 @@
 <!doctype html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hearing Functions</title>
-<p><a href="audio.html">Open the WAV player</a></p>
+<style>
+  :root { --w: 900px; }
+  body{
+    font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
+    max-width: var(--w);
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.45;
+    text-align: center;
+  }
+  h1{ font-size:1.6rem; margin:0 0 1rem; }
+  p.small{ color:#555; font-size:.95rem; margin:.2rem 0 1.2rem; }
+  .btns{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    display:inline-block;
+    padding:.9rem 1.2rem;
+    border-radius:12px;
+    border:1px solid #bbb;
+    background:#f7f7f7;
+    text-decoration:none;
+    color:#111;
+    font-weight:600;
+    min-width:220px;
+  }
+  .btn:hover{ background:#efefef; }
+  .a{ background:#e9f5ff; border-color:#9fd0ff; }
+  .b{ background:#eafbea; border-color:#a9e3a9; }
+</style>
+
+<h1>Hearing Functions — Quizzes</h1>
+<p class="small">Choose a quiz to begin. Make sure your speakers are on.</p>
+
+<div class="btns">
+  <a class="btn a" href="pretest.html">Start Pretest (Part A)</a>
+  <a class="btn b" href="posttest.html">Start Posttest (Part B)</a>
+</div>

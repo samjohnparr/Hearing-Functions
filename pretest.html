@@ -1,0 +1,165 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hearing Functions — Pretest (Part A)</title>
+<style>
+  :root{--w:160px; --h:120px}
+  body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:1000px;margin:24px auto;padding:0 12px;line-height:1.4}
+  h1{font-size:1.4rem;margin:.25rem 0 1rem}
+  .section{border:1px solid #ddd;border-radius:12px;padding:12px;margin:14px 0;background:#fafafa}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .audios .item{border:1px solid #ddd;border-radius:10px;padding:10px;background:white;margin-bottom:10px}
+  .label{font-weight:600}
+  .figs{display:grid;grid-template-columns:repeat(3, minmax(var(--w), 1fr));gap:12px}
+  .fig{position:relative;border:1px solid #ddd;border-radius:10px;background:white;padding:8px}
+  .badge{position:absolute;left:8px;top:8px;background:#333;color:#fff;border-radius:8px;padding:2px 8px;font-size:.8rem}
+  svg{width:100%;height:auto;max-width:var(--w);max-height:var(--h);display:block;margin:0 auto}
+  select{padding:.35rem;border-radius:8px;border:1px solid #bbb}
+  .controls{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  button{padding:.55rem .9rem;border-radius:10px;border:1px solid #bbb;background:#f5f5f5;cursor:pointer}
+  .score{font-weight:700}
+  .ok{color:#0a7a26}
+  .bad{color:#c00}
+  .muted{color:#666;font-size:.92rem}
+</style>
+
+<h1>Hearing Functions — Pretest (Part A)</h1>
+<p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
+
+<div id="app"></div>
+
+<script>
+/* ======= CONFIG: 6-item Pretest (Form A) ======= */
+/* Requires 6 audio files in /audio with these exact names. */
+const PROMPTS = [
+  // V2P (value -> pitch)
+  { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow",  label:"V2P: linear ↑ (gentle)" },
+  { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast",  label:"V2P: linear ↓ (steep)"  },
+  { id:"V2P_constant",         src:"audio/V2P_constant.wav",         correct:"g_const",         label:"V2P: constant"         },
+  // S2P (slope -> pitch)
+  { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", correct:"g_linear", label:"S2P: linear (constant slope)" },
+  { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad",   label:"S2P: quadratic (concave up)" },
+  { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt",   label:"S2P: √x (concave down)"     },
+];
+
+const FIGURES = [
+  // V2P figures
+  { id:"g_lin_pos_slow", fn:(x)=>0.30*x,  domain:[-5,5], caption:"y = 0.3x" },
+  { id:"g_lin_neg_fast", fn:(x)=>-0.80*x, domain:[-5,5], caption:"y = -0.8x" },
+  { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2" },
+  // S2P figures (original functions whose slope behavior matches the sound)
+  { id:"g_linear", fn:(x)=>0.6*x,                        domain:[-5,5], caption:"linear (slope constant)" },
+  { id:"g_quad",   fn:(x)=>x*x,                          domain:[0,4],  caption:"quadratic (concave up)"  },
+  { id:"g_sqrt",   fn:(x)=>Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"sqrt (concave down)"     },
+];
+
+/* ======= QUIZ ENGINE (no server) ======= */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function sampleY(fn, domain, N=200){
+  const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
+  const ys=xs.map(fn);
+  let ymin=Math.min(...ys), ymax=Math.max(...ys);
+  if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
+  if(ymax-ymin<1e-6){ymax=ymin+1;}
+  const pad=0.1*(ymax-ymin);
+  return {xs, ys, ymin:ymin-pad, ymax:ymax+pad};
+}
+const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
+const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
+
+function drawGraph(el, fn, domain, caption){
+  const W=160,H=120, NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const {xs,ys,ymin,ymax}=sampleY(fn, domain, 200);
+  // axes
+  if(domain[0]<=0 && domain[1]>=0){
+    const x0=mapX(0,domain[0],domain[1],W);
+    const l=document.createElementNS(NS,"line"); l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+  }
+  if(ymin<=0 && ymax>=0){
+    const y0=mapY(0,ymin,ymax,H);
+    const l=document.createElementNS(NS,"line"); l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+  }
+  // path
+  let d=""; for(let i=0;i<xs.length;i++){const X=mapX(xs[i],domain[0],domain[1],W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);}
+  const path=document.createElementNS(NS,"path"); path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2"); svg.appendChild(path);
+  const cap=document.createElement("div"); cap.className="muted"; cap.style.textAlign="center"; cap.style.marginTop="4px"; cap.textContent=caption||"";
+  el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
+}
+
+(function init(){
+  const app=document.getElementById("app");
+  const items = PROMPTS.map(x=>({...x}));
+  const figs  = FIGURES.map(x=>({...x}));
+  shuffle(items); shuffle(figs);
+  const letters="ABCDEF".split(""); figs.forEach((f,i)=> f.letter=letters[i]);
+  const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
+
+  const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
+  const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
+
+  const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
+  const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
+
+  const selects=[];
+  items.forEach((it, idx)=>{
+    const card=document.createElement("div"); card.className="item";
+    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}:</span> <span class="muted">${it.label}</span>`;
+    const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
+    const sel=document.createElement("select");
+    sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
+    selects.push({sel, item:it});
+    card.appendChild(title); card.appendChild(player); card.appendChild(document.createElement("br")); card.appendChild(sel);
+    left.appendChild(card);
+  });
+
+  figs.forEach(f=>{
+    const box=document.createElement("div"); box.className="fig";
+    const badge=document.createElement("div"); badge.className="badge"; badge.textContent=f.letter;
+    const plot=document.createElement("div");
+    box.appendChild(badge); box.appendChild(plot);
+    right.appendChild(box);
+    drawGraph(plot, f.fn, f.domain, f.caption);
+  });
+
+  const controls=document.createElement("div"); controls.className="controls";
+  const btnCheck=document.createElement("button"); btnCheck.textContent="Check answers"; btnCheck.disabled=true;
+  const btnReset=document.createElement("button"); btnReset.textContent="Reset";
+  const btnCSV=document.createElement("button"); btnCSV.textContent="Download CSV"; btnCSV.style.display="none";
+  const out=document.createElement("span"); out.className="score";
+  controls.append(btnCheck, btnReset, out, btnCSV); sec.appendChild(controls);
+
+  function updateEnable(){ btnCheck.disabled = selects.some(s=>!s.sel.value); }
+  selects.forEach(s=> s.sel.addEventListener("change", updateEnable)); updateEnable();
+
+  btnCheck.addEventListener("click", ()=>{
+    let correct=0;
+    const rows=[["phase","item_label","audio_id","chosen_letter","correct_letter","is_correct"]];
+    selects.forEach((s,i)=>{
+      const chosen=s.sel.value;
+      const correctLetter = letterByFigId[ PROMPTS.find(p=>p.id===s.item.id).correct ];
+      const ok = (chosen===correctLetter);
+      if(ok) correct++;
+      const mark=document.createElement("span"); mark.className = ok ? "ok" : "bad"; mark.style.marginLeft="8px"; mark.textContent = ok ? "✔" : "✖"; s.sel.after(mark);
+      rows.push(["pre", s.item.label, s.item.id, chosen, correctLetter, ok]);
+      s.sel.disabled=true;
+    });
+    out.textContent=` Score: ${correct} / ${selects.length}`;
+    btnCSV.style.display="inline-block";
+    btnCSV.onclick=()=>{
+      const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
+      const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement("a");
+      a.href=URL.createObjectURL(blob); a.download=`results_pre_${Date.now()}.csv`; a.click();
+    };
+    btnCheck.disabled=true;
+  });
+
+  btnReset.addEventListener("click", ()=>{
+    selects.forEach(s=>{
+      s.sel.value=""; s.sel.disabled=false;
+      let n=s.sel.nextSibling; while(n && (n.className==="ok"||n.className==="bad")){const r=n; n=n.nextSibling; r.remove();}
+    });
+    out.textContent=""; btnCSV.style.display="none"; updateEnable();
+  });
+})();
+</script>
