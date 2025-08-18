@@ -105,6 +105,9 @@ function drawGraph(el, fn, domain, caption){
   shuffle(items); shuffle(figs);
   const letters="ABCDEF".split(""); figs.forEach((f,i)=> f.letter=letters[i]);
   const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
+  const captionByFigId = Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
+  const phase = document.title.toLowerCase().includes("pretest") ? "pre" : "post";
+
 
   const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
   const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
@@ -146,29 +149,54 @@ function drawGraph(el, fn, domain, caption){
   btnCheck.addEventListener("click", ()=>{
     let correct=0;
     const rows=[["phase","item_label","audio_id","chosen_letter","correct_letter","is_correct"]];
+
     selects.forEach((s,i)=>{
-      const chosen=s.sel.value;
-      const correctLetter = letterByFigId[ PROMPTS.find(p=>p.id===s.item.id).correct ];
+      const chosen = s.sel.value;
+      const spec = PROMPTS.find(p=>p.id===s.item.id);
+      const correctLetter = letterByFigId[ spec.correct ];
       const ok = (chosen===correctLetter);
       if(ok) correct++;
-      const mark=document.createElement("span"); mark.className = ok ? "ok" : "bad"; mark.style.marginLeft="8px"; mark.textContent = ok ? "✔" : "✖"; s.sel.after(mark);
-      rows.push(["pre", s.item.id, s.item.id, chosen, correctLetter, ok]);
+
+      // ✔ / ✖ mark
+      const mark=document.createElement("span");
+      mark.className = ok ? "ok" : "bad";
+      mark.style.marginLeft="8px";
+      mark.textContent = ok ? "✔" : "✖";
+      s.sel.after(mark);
+
+      // Show the correct answer + figure caption
+      const ans=document.createElement("div");
+      ans.className="muted answer";
+      const cap = captionByFigId[spec.correct] || "";
+      ans.textContent = `Correct: ${correctLetter}${cap ? " — " + cap : ""}`;
+      mark.after(ans);
+
+      rows.push([phase, s.item.id, s.item.id, chosen, correctLetter, ok]);
       s.sel.disabled=true;
     });
+
     out.textContent=` Score: ${correct} / ${selects.length}`;
     btnCSV.style.display="inline-block";
     btnCSV.onclick=()=>{
       const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
       const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement("a");
-      a.href=URL.createObjectURL(blob); a.download=`results_pre_${Date.now()}.csv`; a.click();
+      a.href=URL.createObjectURL(blob); a.download=`results_${phase}_${Date.now()}.csv`; a.click();
     };
     btnCheck.disabled=true;
   });
 
+
   btnReset.addEventListener("click", ()=>{
     selects.forEach(s=>{
       s.sel.value=""; s.sel.disabled=false;
-      let n=s.sel.nextSibling; while(n && (n.className==="ok"||n.className==="bad")){const r=n; n=n.nextSibling; r.remove();}
+      // remove ✔/✖ and the shown answers
+      let n = s.sel.nextSibling;
+      while(n){
+        const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
+        const next = n.nextSibling;
+        if(rm) n.remove();
+        n = next;
+      }
     });
     out.textContent=""; btnCSV.style.display="none"; updateEnable();
   });
