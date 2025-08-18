@@ -44,13 +44,17 @@
 /* ======= CONFIG: 6-item Pretest (Form A) ======= */
 const PROMPTS = [
   // V2P (value -> pitch)
-  { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow",  label:"" },
-  { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast",  label:"" },
-  { id:"V2P_constant",         src:"audio/V2P_constant.wav",         correct:"g_const",         label:"" },
+  { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow" },
+  { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast" },
+  // constant-tone: accept either y=2 or linear (constant slope)
+  { id:"V2P_constant",         src:"audio/V2P_constant.wav",         accept:["g_const","g_linear"] },
+
   // S2P (slope -> pitch)
-  { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", correct:"g_linear", label:"" },
-  { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad",   label:"" },
-  { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt_mir",   label:"" },
+  // constant-tone: accept either linear (constant slope) or y=2
+  { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", accept:["g_linear","g_const"] },
+  { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad" },
+  // concave down visual mirrored to match a falling tone intuition
+  { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt_mir" },
 ];
 
 const FIGURES = [
@@ -62,7 +66,6 @@ const FIGURES = [
   // S2P figures
   { id:"g_linear",   fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (slope constant)" },
   { id:"g_quad",     fn:(x)=>x*x,                           domain:[0,4],  caption:"quadratic (concave up)"  },
-  // mirrored vertically so falling S2P tone visually matches a falling curve
   { id:"g_sqrt_mir", fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x"                 },
 ];
 
@@ -105,9 +108,15 @@ function drawGraph(el, fn, domain, caption){
   shuffle(items); shuffle(figs);
   const letters="ABCDEF".split(""); figs.forEach((f,i)=> f.letter=letters[i]);
   const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
-  const captionByFigId = Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
-  const phase = document.title.toLowerCase().includes("pretest") ? "pre" : "post";
+  const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
+  const phase="pre";
 
+  // helper: prompt -> accepted figure IDs
+  function getAcceptIds(spec){
+    if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
+    if (spec.correct) return [spec.correct];
+    return [];
+  }
 
   const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
   const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
@@ -148,13 +157,15 @@ function drawGraph(el, fn, domain, caption){
 
   btnCheck.addEventListener("click", ()=>{
     let correct=0;
-    const rows=[["phase","item_label","audio_id","chosen_letter","correct_letter","is_correct"]];
+    const rows=[["phase","audio_id","chosen_letter","accepted_letters","is_correct"]];
 
     selects.forEach((s,i)=>{
       const chosen = s.sel.value;
       const spec = PROMPTS.find(p=>p.id===s.item.id);
-      const correctLetter = letterByFigId[ spec.correct ];
-      const ok = (chosen===correctLetter);
+      const acceptIds = getAcceptIds(spec);
+      const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
+      const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
+      const ok = acceptLetters.includes(chosen);
       if(ok) correct++;
 
       // ✔ / ✖ mark
@@ -164,14 +175,15 @@ function drawGraph(el, fn, domain, caption){
       mark.textContent = ok ? "✔" : "✖";
       s.sel.after(mark);
 
-      // Show the correct answer + figure caption
+      // Show the answer key (handles multiple accepted)
       const ans=document.createElement("div");
       ans.className="muted answer";
-      const cap = captionByFigId[spec.correct] || "";
-      ans.textContent = `Correct: ${correctLetter}${cap ? " — " + cap : ""}`;
+      const letterText = acceptLetters.join(" or ");
+      const capText    = acceptCaps.join(" / ");
+      ans.textContent  = `Correct: ${letterText}${capText ? " — " + capText : ""}`;
       mark.after(ans);
 
-      rows.push([phase, s.item.id, s.item.id, chosen, correctLetter, ok]);
+      rows.push([phase, s.item.id, chosen, letterText, ok]);
       s.sel.disabled=true;
     });
 
@@ -184,7 +196,6 @@ function drawGraph(el, fn, domain, caption){
     };
     btnCheck.disabled=true;
   });
-
 
   btnReset.addEventListener("click", ()=>{
     selects.forEach(s=>{

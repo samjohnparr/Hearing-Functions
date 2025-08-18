@@ -44,13 +44,13 @@
 /* ======= CONFIG: 6-item Posttest (Form B) ======= */
 const PROMPTS = [
   // V2P
-  { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast",  label:"" },
-  { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow",  label:"" },
-  { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast",       label:"" },
-  // S2P
-  { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir",    label:"" },
-  { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos",  label:"" },
-  { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg",  label:"" },
+  { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast" },
+  { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow" },
+  { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast" },
+  // S2P (log visually mirrored to align with a falling tone intuition)
+  { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir" },
+  { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos" },
+  { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg" },
 ];
 
 const FIGURES = [
@@ -59,7 +59,7 @@ const FIGURES = [
   { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,                domain:[-5,5], caption:"y = -0.2x" },
   { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
 
-  // S2P figures (log mirrored vertically to match falling tone visually)
+  // S2P figures
   { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x)" },
   { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2]" },
   { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
@@ -104,9 +104,14 @@ function drawGraph(el, fn, domain, caption){
   shuffle(items); shuffle(figs);
   const letters="ABCDEF".split(""); figs.forEach((f,i)=> f.letter=letters[i]);
   const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
-  const captionByFigId = Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
-  const phase = document.title.toLowerCase().includes("pretest") ? "pre" : "post";
+  const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
+  const phase="post";
 
+  function getAcceptIds(spec){
+    if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
+    if (spec.correct) return [spec.correct];
+    return [];
+  }
 
   const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
   const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
@@ -147,30 +152,31 @@ function drawGraph(el, fn, domain, caption){
 
   btnCheck.addEventListener("click", ()=>{
     let correct=0;
-    const rows=[["phase","item_label","audio_id","chosen_letter","correct_letter","is_correct"]];
+    const rows=[["phase","audio_id","chosen_letter","accepted_letters","is_correct"]];
 
     selects.forEach((s,i)=>{
       const chosen = s.sel.value;
       const spec = PROMPTS.find(p=>p.id===s.item.id);
-      const correctLetter = letterByFigId[ spec.correct ];
-      const ok = (chosen===correctLetter);
+      const acceptIds = getAcceptIds(spec);
+      const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
+      const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
+      const ok = acceptLetters.includes(chosen);
       if(ok) correct++;
 
-      // ✔ / ✖ mark
       const mark=document.createElement("span");
       mark.className = ok ? "ok" : "bad";
       mark.style.marginLeft="8px";
       mark.textContent = ok ? "✔" : "✖";
       s.sel.after(mark);
 
-      // Show the correct answer + figure caption
       const ans=document.createElement("div");
       ans.className="muted answer";
-      const cap = captionByFigId[spec.correct] || "";
-      ans.textContent = `Correct: ${correctLetter}${cap ? " — " + cap : ""}`;
+      const letterText = acceptLetters.join(" or ");
+      const capText    = acceptCaps.join(" / ");
+      ans.textContent  = `Correct: ${letterText}${capText ? " — " + capText : ""}`;
       mark.after(ans);
 
-      rows.push([phase, s.item.id, s.item.id, chosen, correctLetter, ok]);
+      rows.push([phase, s.item.id, chosen, letterText, ok]);
       s.sel.disabled=true;
     });
 
@@ -187,7 +193,6 @@ function drawGraph(el, fn, domain, caption){
   btnReset.addEventListener("click", ()=>{
     selects.forEach(s=>{
       s.sel.value=""; s.sel.disabled=false;
-      // remove ✔/✖ and the shown answers
       let n = s.sel.nextSibling;
       while(n){
         const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
