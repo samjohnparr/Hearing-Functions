@@ -42,15 +42,17 @@ const PROMPTS = [
 ];
 
 const FIGURES = [
-  // V2P figures
-  { id:"g_lin_pos_fast", fn:(x)=>0.80*x,      domain:[-5,5], caption:"y = 0.8x" },
-  { id:"g_lin_neg_slow", fn:(x)=>-0.30*x,     domain:[-5,5], caption:"y = -0.3x" },
-  { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^{x/1.5}" },
-  // S2P figures
+  // V2P figures (match new audio slopes)
+  { id:"g_lin_pos_fast", fn:(x)=>1.20*x,      domain:[-5,5], caption:"y = 1.2x" },
+  { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,     domain:[-5,5], caption:"y = -0.2x" },
+  { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5)" },
+
+  // S2P figures (unchanged)
   { id:"g_log",       fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"log (concave down)" },
   { id:"g_cubic_pos", fn:(x)=>x**3,                        domain:[0,2],   caption:"cubic on [0,2]" },
   { id:"g_cubic_neg", fn:(x)=>x**3,                        domain:[-2,0],  caption:"cubic on [-2,0]" },
 ];
+
 
 /* ======= QUIZ ENGINE (same as pretest) ======= */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}

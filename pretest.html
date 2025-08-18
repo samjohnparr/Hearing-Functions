@@ -43,15 +43,17 @@ const PROMPTS = [
 ];
 
 const FIGURES = [
-  // V2P figures
-  { id:"g_lin_pos_slow", fn:(x)=>0.30*x,  domain:[-5,5], caption:"y = 0.3x" },
-  { id:"g_lin_neg_fast", fn:(x)=>-0.80*x, domain:[-5,5], caption:"y = -0.8x" },
+  // V2P figures (match new audio slopes)
+  { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x" },
+  { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x" },
   { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2" },
-  // S2P figures (original functions whose slope behavior matches the sound)
+
+  // S2P figures (unchanged)
   { id:"g_linear", fn:(x)=>0.6*x,                        domain:[-5,5], caption:"linear (slope constant)" },
   { id:"g_quad",   fn:(x)=>x*x,                          domain:[0,4],  caption:"quadratic (concave up)"  },
   { id:"g_sqrt",   fn:(x)=>Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"sqrt (concave down)"     },
 ];
+
 
 /* ======= QUIZ ENGINE (no server) ======= */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
