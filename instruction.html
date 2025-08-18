@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hearing Functions — Instructional Examples (Single Column)</title>
+<title>Hearing Functions: Instructional Examples</title>
 <style>
   :root{
     --page-w: 1000px;
@@ -15,10 +15,13 @@
     padding: 0 16px;
     line-height: 1.55;
   }
-  h1{ font-size:1.8rem; margin:.2rem 0 .6rem }
+  h1{ font-size:1.8rem; margin:.2rem 0 .4rem }
   h2{ font-size:1.25rem; margin:1.6rem 0 .6rem }
+  .author{ margin:.1rem 0 1rem; color:#444; font-size:1rem; }
+  .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
+  .author a:hover{ text-decoration:underline; }
   .note{ color:#555; font-size:1rem; margin-bottom:14px }
-  .stack{ display:block }
+  .stack{ display:block }          /* single column */
   .card{
     border:1px solid #ddd; border-radius:14px; background:#fafafa;
     padding:14px; margin:14px 0;
@@ -54,14 +57,16 @@
   <a class="homebtn" href="index.html">🏠 Home</a>
 </div>
 
-<h1>Hearing Functions — Instructional Examples</h1>
+<h1>Hearing Functions: Instructional Examples</h1>
+<p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John Parr</a></p>
+
 <p class="note">
   All clips use the same timbre, tempo, and pitch range (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
-  For <span class="em">value→pitch (V2P)</span>, a single fixed vertical scale is used across examples, so
-  <span class="em">steeper lines sweep a wider pitch span</span>.
-  For <span class="em">slope→pitch (S2P)</span>, you hear the <em>rate of change</em>:
-  constant slope = constant tone; concave up = rising tone; concave down = falling tone.
-  Playback proceeds from the left end of the domain to the right: the first tone corresponds to x = x₀, the last tone to x = x₁.
+  Playback proceeds from the left end of the domain to the right end:
+  the first tone corresponds to <em>x = x₀</em>, the last tone to <em>x = x₁</em>.
+  For <span class="em">value→pitch (V2P)</span>, pitch maps to the function’s value <em>f(x)</em>, so steeper lines sweep a wider pitch span under a fixed scale.
+  For <span class="em">slope→pitch (S2P)</span>, pitch maps to the signed slope <em>f′(x)</em>:
+  constant slope = constant tone; concave up = rising tone (slope increases); concave down = falling tone (slope decreases).
 </p>
 
 <h2>Value → Pitch (V2P): Hear height / monotonicity</h2>
@@ -71,7 +76,7 @@
 <div id="s2p" class="stack"></div>
 
 <script>
-// ---------- plotting helpers ----------
+/* ---------- plotting helpers ---------- */
 function sampleY(fn, domain, N=400){
   const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
   const ys=xs.map(fn);
@@ -120,19 +125,19 @@ function drawGraph(container, fn, domain, caption){
   container.appendChild(wrap);
 }
 
-// ---------- examples (match PRAC_*.wav filenames) ----------
+/* ---------- examples (match PRAC_*.wav filenames you generated) ---------- */
 const V2P = [
   {
     id:"PRAC_V2P_linear_pos_very_gentle", label:"Linear ↑ (very gentle)",
     fn:(x)=>0.10*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_pos_very_gentle.wav",
     listen:"A slow, steady rise across time (small pitch span).",
-    discuss:"Constant positive slope but small magnitude ⇒ value increases slowly. With global scaling, gentle lines sweep a narrower pitch range than steep lines."
+    discuss:"Constant positive slope but small magnitude ⇒ value increases slowly. With a fixed vertical scale, gentle lines sweep a narrower pitch range than steep lines."
   },
   {
     id:"PRAC_V2P_linear_neg_very_steep", label:"Linear ↓ (very steep)",
     fn:(x)=>-1.30*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_neg_very_steep.wav",
     listen:"A strong downward sweep (wide pitch span).",
-    discuss:"Large negative slope: value drops quickly. The fixed scale makes the rapid decrease audible."
+    discuss:"Large negative slope: value drops quickly. The fixed scale makes the rapid decrease clearly audible."
   },
   {
     id:"PRAC_V2P_exponential_slow", label:"Exponential ↑ (slow acceleration)",
@@ -152,30 +157,30 @@ const S2P = [
   {
     id:"PRAC_S2P_quadratic_shifted", label:"Quadratic (concave up), vertex at x=1",
     fn:(x)=>(x-1)**2, domain:[-1,3], src:"audio/PRAC_S2P_quadratic_shifted.wav",
-    listen:"Tone rises throughout (lowest near the vertex).",
-    discuss:"Slope is smallest at the vertex (x=1) and grows as x moves away ⇒ slope→pitch rises; concavity up means the rate is increasing."
+    listen:"Tone rises steadily from start to end; it crosses mid-pitch near the vertex.",
+    discuss:"f′(x)=2(x−1) increases from −2 to +4 across the domain. Slope→pitch uses the signed slope, so pitch increases as the slope increases. At x=1 the slope is 0, so the pitch is around the middle of the clip’s range (not the minimum)."
   },
   {
     id:"PRAC_S2P_log_wider", label:"Log(x) (concave down)",
     fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
-    listen:"Tone falls steadily.",
-    discuss:"Slope 1/x decreases as x increases ⇒ slope→pitch falls; concave down means rate is decreasing."
+    listen:"Tone falls steadily (highest at the start, lowest at the end).",
+    discuss:"Slope f′(x)=1/x is positive but decreases as x increases ⇒ slope→pitch falls. Concave down means the rate of change is decreasing."
   },
   {
     id:"PRAC_S2P_cubic_full", label:"Cubic x³ (inflection at 0)",
     fn:(x)=>x**3, domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
-    listen:"V-shaped melody: high → low → high (minimum at x=0).",
-    discuss:"Slope is 3x²: large at the ends, zero at x=0. Slope→pitch highlights the inflection—rate is lowest at the center, higher on both sides."
+    listen:"High → low → high (lowest at the center).",
+    discuss:"Slope f′(x)=3x² is large at both ends and 0 at x=0. Slope→pitch highlights the inflection—rate is lowest in the middle, higher on both sides."
   },
   {
     id:"PRAC_S2P_logistic", label:"Logistic 1/(1+e^{-x}) (S-curve)",
     fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
-    listen:"Bell-shaped melody: low → high → low (peak in the middle).",
-    discuss:"The function is increasing across the whole domain, but its slope is largest near x≈0 and smaller near the ends. The tone falls at the end because the rate of change (slope) is decreasing toward 0, not because y is going down."
+    listen:"Low → high → low (peak in the middle).",
+    discuss:"The function increases everywhere, but its slope peaks near x≈0 and shrinks toward 0 near the ends. Because S2P maps the signed slope, the tone is low at both ends and highest near the midpoint."
   },
 ];
 
-// ---------- render ----------
+/* ---------- render ---------- */
 function makeCard(entry, mapping, mount){
   const card=document.createElement("div"); card.className="card";
   const head=document.createElement("div"); head.className="head";
