@@ -17,6 +17,7 @@
   }
   h1{ font-size:1.8rem; margin:.2rem 0 .4rem }
   h2{ font-size:1.25rem; margin:1.6rem 0 .6rem }
+  h3{ font-size:1.05rem; margin:1.0rem 0 .4rem }
   .author{ margin:.1rem 0 1rem; color:#444; font-size:1rem; }
   .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
   .author a:hover{ text-decoration:underline; }
@@ -44,6 +45,15 @@
   .mini{ font-size:1rem; color:#333; margin:.35rem 0 }
   .em{ font-weight:600 }
 
+  /* Teacher notes toggle */
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+  .btn{
+    padding:.45rem .8rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;cursor:pointer;
+  }
+  .btn:hover{background:#eee}
+  .tnote{display:none;border-left:4px solid #6aa3ff;background:#f1f6ff;padding:.6rem .7rem;margin:.6rem 0;border-radius:8px}
+  body.show-notes .tnote{display:block}
+
   /* Home button */
   .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
   .homebtn{
@@ -51,6 +61,11 @@
     background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
   }
   .homebtn:hover{background:#eee;}
+
+  /* Lists inside notes */
+  .tnote ul{margin:.4rem 0 .2rem 1.2rem}
+  .tnote li{margin:.18rem 0}
+  .badge{display:inline-block;padding:.12rem .45rem;border:1px solid #bbb;border-radius:8px;background:#fafafa;margin-left:.4rem;font-size:.8rem}
 </style>
 
 <div class="homebar">
@@ -59,6 +74,12 @@
 
 <h1>Hearing Functions: Instructional Examples</h1>
 <p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a></p>
+
+<div class="toolbar">
+  <button id="toggleNotes" class="btn">👁️ Show/Hide Teacher Notes</button>
+  <a class="btn" href="pretest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Pretest</a>
+  <a class="btn" href="posttest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Posttest</a>
+</div>
 
 <p class="note">
   We’re turning graphs into sound. Each short “beep” walks from the <em>left</em> of the graph to the <em>right</em>.
@@ -70,13 +91,76 @@
   All clips use the same instrument, speed, and pitch range.
 </p>
 
+<div class="tnote">
+  <h3 style="margin-top:.2rem">Lesson Objectives</h3>
+  By the end of the class, students will be able to:
+  <ul>
+    <li>Explain how graph <em>height</em> maps to pitch in V2P.</li>
+    <li>Explain how graph <em>rate of change</em> (slope) maps to pitch in S2P.</li>
+    <li>Match sounds to graphs (and vice versa) for linear, exponential/log, quadratic, and logistic examples.</li>
+  </ul>
+
+  <h3>Before Class (5–10 min)</h3>
+  <ul>
+    <li>Check speakers or student headphones; set volume to a safe level.</li>
+    <li>Open this page and the <strong>Pretest</strong> in separate tabs. If you want fixed randomization, append <code>?seed=classA</code> (any string works).</li>
+    <li>Optional: pair students for Think-Pair-Share moments.</li>
+  </ul>
+
+  <h3>Class Flow (45–60 min)</h3>
+  <ol>
+    <li><strong>Pretest (8–10 min)</strong> — Students answer individually on <em>pretest.html</em>. No hints, no labels.</li>
+    <li><strong>Concept Launch (3–5 min)</strong> — Explain V2P vs S2P with the short paragraph above.</li>
+    <li><strong>Guided Listening: V2P (8–10 min)</strong> — Play each V2P card: ask “What do you predict?” then reveal and discuss.</li>
+    <li><strong>Quick Check (2–3 min)</strong> — Ask a cold-call or hands-up question: “If the line is twice as steep, what happens to the pitch span?”</li>
+    <li><strong>Guided Listening: S2P (10–12 min)</strong> — Emphasize <em>rate of change</em>. For each, ask: “Where is it changing fastest?”</li>
+    <li><strong>Pair Practice (5–8 min)</strong> — Students choose one V2P and one S2P clip to explain to a partner (why it sounds that way).</li>
+    <li><strong>Posttest (8–10 min)</strong> — Students answer individually on <em>posttest.html</em>.</li>
+    <li><strong>Reflect (2–3 min)</strong> — Quick debrief: “What clue helped you the most?”</li>
+  </ol>
+
+  <h3>Formative Prompts You Can Use Anytime</h3>
+  <ul>
+    <li>“Point to the part of the graph that matches the highest note.”</li>
+    <li>“Where does the note change most quickly? What does that tell us about the slope there?”</li>
+    <li>“If we mirrored this graph vertically, how would the sound change?”</li>
+  </ul>
+
+  <h3>Common Misconceptions to Address</h3>
+  <ul>
+    <li><em>S2P ≠ height.</em> In S2P, a high note means “changing fast,” not “high y-value.”</li>
+    <li><em>Direction is left → right.</em> The first tone is the left end of the domain.</li>
+    <li>Exponential/logistic <em>values</em> can rise while the S2P <em>pitch</em> falls at the end (because slope shrinks toward 0).</li>
+  </ul>
+</div>
+
 <h2>Value → Pitch (V2P): Hear the height of the graph</h2>
 <div id="v2p" class="stack"></div>
 
 <h2>Slope → Pitch (S2P): Hear how fast the graph is changing</h2>
 <div id="s2p" class="stack"></div>
 
+<div class="tnote">
+  <h3>Closure & Next Steps</h3>
+  <ul>
+    <li>Invite 2–3 students to summarize the difference between V2P and S2P in one sentence each.</li>
+    <li>Extension idea: Have students draw a mini-graph and predict the sound (class votes), then play the actual clip.</li>
+    <li>Homework option: Write a 4–5 sentence explanation of a new function (student’s choice) in both V2P and S2P terms.</li>
+  </ul>
+</div>
+
 <script>
+/* ---------- Teacher-notes toggle ---------- */
+(function(){
+  const key = "hf_show_notes";
+  const body = document.body;
+  if(localStorage.getItem(key)==="1"){ body.classList.add("show-notes"); }
+  document.getElementById("toggleNotes").addEventListener("click", ()=>{
+    body.classList.toggle("show-notes");
+    localStorage.setItem(key, body.classList.contains("show-notes") ? "1" : "0");
+  });
+})();
+
 /* ---------- plotting helpers ---------- */
 function sampleY(fn, domain, N=400){
   const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
@@ -132,25 +216,41 @@ const V2P = [
     id:"PRAC_V2P_linear_pos_very_gentle", label:"Line going up (gentle)",
     fn:(x)=>0.10*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_pos_very_gentle.wav",
     listen:"The note slowly goes up.",
-    discuss:"The graph climbs a little each step, so the pitch also climbs a little each step."
+    discuss:"The graph climbs a little each step, so the pitch also climbs a little each step.",
+    ask:[
+      "If the line were twice as steep, how would the sound change?",
+      "Where is the lowest note? Where is the highest?"
+    ]
   },
   {
     id:"PRAC_V2P_linear_neg_very_steep", label:"Line going down (very steep)",
     fn:(x)=>-1.30*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_neg_very_steep.wav",
     listen:"The note drops fast and by a lot.",
-    discuss:"The graph falls quickly, so the sound falls quickly too."
+    discuss:"The graph falls quickly, so the sound falls quickly too.",
+    ask:[
+      "How does this compare to the gentle line?",
+      "What part of the clip changes the most in pitch?"
+    ]
   },
   {
     id:"PRAC_V2P_exponential_slow", label:"Exponential up (starts slow, then faster)",
     fn:(x)=>Math.pow(2, x/3.0), domain:[-4,4], src:"audio/PRAC_V2P_exponential_slow.wav",
     listen:"Starts rising slowly, then rises faster near the end.",
-    discuss:"The graph starts low and speeds up as it goes right, so the pitch does the same."
+    discuss:"The graph starts low and speeds up as it goes right, so the pitch does the same.",
+    ask:[
+      "Where does the biggest jump in pitch happen?",
+      "What would a ‘reverse’ of this sound like?"
+    ]
   },
   {
     id:"PRAC_V2P_exponential_decay", label:"Exponential down (fast drop, then levels)",
     fn:(x)=>Math.pow(2, -x/1.8), domain:[-4,4], src:"audio/PRAC_V2P_exponential_decay.wav",
     listen:"Drops quickly at first, then levels off.",
-    discuss:"The graph falls a lot at the start and then flattens, so the pitch falls then steadies."
+    discuss:"The graph falls a lot at the start and then flattens, so the pitch falls then steadies.",
+    ask:[
+      "Why does the pitch change less near the end?",
+      "Where would the middle note be compared to start/end?"
+    ]
   },
 ];
 
@@ -159,25 +259,31 @@ const S2P = [
     id:"PRAC_S2P_quadratic_shifted", label:"Parabola with lowest point at x=1",
     fn:(x)=>(x-1)**2, domain:[-1,3], src:"audio/PRAC_S2P_quadratic_shifted.wav",
     listen:"The note keeps going up from start to finish.",
-    discuss:"We’re listening to how fast the graph changes. On the left it’s changing downward, then it changes more and more upward, so the pitch rises across the clip."
+    discuss:"We’re listening to how fast the graph changes. On the left it’s changing downward, then it changes more and more upward, so the pitch rises across the clip.",
+    ask:[
+      "At x=1 the slope is 0. What part of the sound does that feel like?",
+      "How would this differ if we used V2P instead?"
+    ]
   },
   {
     id:"PRAC_S2P_log_wider", label:"Log shape going down",
-    fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
+    fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
     listen:"The note slowly goes down over time.",
-    discuss:"At the start the graph changes more; later it changes less. Less change = lower pitch, so the sound gently falls."
-  },
-  {
-    id:"PRAC_S2P_cubic_full", label:"Cubic S-curve (flattest in the middle)",
-    fn:(x)=>-(x**3), domain:[-2,2], src:"audio/PRAC_S2P_cubic_full.wav",
-    listen:"Low → higher in the middle → low again.",
-    discuss:"The graph changes the least in the middle and the most near the ends. We hear that as the pitch peaking in the middle and dipping near both ends."
+    discuss:"At the start the graph changes more; later it changes less. Less change = lower pitch, so the sound gently falls.",
+    ask:[
+      "Where is the change fastest? How do you know from the sound?",
+      "What happens to pitch if we shift the domain to larger x-values?"
+    ]
   },
   {
     id:"PRAC_S2P_logistic", label:"Logistic (fastest in the middle)",
     fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
     listen:"Low → high → low (highest in the middle).",
-    discuss:"This graph changes slow → fast → slow. Fast change = higher pitch, so you hear the peak in the middle."
+    discuss:"This graph changes slow → fast → slow. Fast change = higher pitch, so you hear the peak in the middle.",
+    ask:[
+      "How can the function keep rising while the pitch falls at the end?",
+      "Where would you place the inflection point from the sound alone?"
+    ]
   },
 ];
 
@@ -191,7 +297,22 @@ function makeCard(entry, mapping, mount){
   const player=document.createElement("audio"); player.controls=true; player.src=entry.src;
   const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What you'll hear:</span> ${entry.listen}`;
   const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Why it sounds like that:</span> ${entry.discuss}`;
-  card.appendChild(head); card.appendChild(fig); card.appendChild(player); card.appendChild(listen); card.appendChild(discuss);
+
+  // Teacher prompts (hidden unless notes are shown)
+  const tbox=document.createElement("div"); tbox.className="tnote";
+  const hints = (entry.ask||[]).map(q=>`<li>${q}</li>`).join("");
+  tbox.innerHTML = `
+    <div><strong>Teacher prompts</strong> <span class="badge">Think–Pair–Share ready</span></div>
+    <ul>${hints || "<li>Ask students to predict before playing, then justify after.</li>"}</ul>
+    <div style="margin-top:.4rem"><em>Tip:</em> Play twice — once blind (predict), once with the graph in view.</div>
+  `;
+
+  card.appendChild(head);
+  card.appendChild(fig);
+  card.appendChild(player);
+  card.appendChild(listen);
+  card.appendChild(discuss);
+  card.appendChild(tbox);
   mount.appendChild(card);
 }
 

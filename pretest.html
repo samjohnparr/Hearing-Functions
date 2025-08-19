@@ -5,11 +5,13 @@
 <style>
   :root{--w:160px; --h:120px}
   body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:1000px;margin:24px auto;padding:0 12px;line-height:1.4}
-  h1{font-size:1.4rem;margin:.25rem 0 1rem}
+  h1{font-size:1.4rem;margin:.25rem 0 .6rem}
   .section{border:1px solid #ddd;border-radius:12px;padding:12px;margin:14px 0;background:#fafafa}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .audios .item{border:1px solid #ddd;border-radius:10px;padding:10px;background:white;margin-bottom:10px}
   .label{font-weight:600}
+  .legend{margin:-6px 0 10px;color:#444;font-size:.95rem}
+  .maptag{display:inline-block;margin:0 .35rem 0 .5rem;font-size:.78rem;border:1px solid #b9cdf9;background:#e8eefc;border-radius:8px;padding:2px 8px}
   .figs{display:grid;grid-template-columns:repeat(3, minmax(var(--w), 1fr));gap:12px}
   .fig{position:relative;border:1px solid #ddd;border-radius:10px;background:white;padding:8px}
   .badge{position:absolute;left:8px;top:8px;background:#333;color:#fff;border-radius:8px;padding:2px 8px;font-size:.8rem}
@@ -21,13 +23,8 @@
   .ok{color:#0a7a26}
   .bad{color:#c00}
   .muted{color:#666;font-size:.92rem}
-
-  /* Home button */
   .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
-  .homebtn{
-    display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
-    background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
-  }
+  .homebtn{display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;text-decoration:none;color:#111;font-weight:600}
   .homebtn:hover{background:#eee;}
 </style>
 
@@ -36,6 +33,10 @@
 </div>
 
 <h1>Hearing Functions: Pretest (Part A)</h1>
+<p class="legend">
+  <span class="maptag" title="Value → Pitch">V2P</span> Value→Pitch: higher graph → higher note.
+  <span class="maptag" title="Slope → Pitch">S2P</span> Slope→Pitch: steeper/faster change → higher note.
+</p>
 <p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
 
 <div id="app"></div>
@@ -69,8 +70,49 @@ const FIGURES = [
   { id:"g_sqrt_mir", fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x"                 },
 ];
 
-/* ======= QUIZ ENGINE (no server) ======= */
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+/* ======= Seeded RNG: use ?seed=... to lock order and letters ======= */
+function cyrb128(str){
+  let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
+  for (let i=0, k; i<str.length; i++) {
+    k = str.charCodeAt(i);
+    h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+    h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+    h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+    h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+  }
+  h1 = Math.imul(h3 ^ (h1>>>18), 597399067);
+  h2 = Math.imul(h4 ^ (h2>>>22), 2869860233);
+  h3 = Math.imul(h1 ^ (h3>>>17), 951274213);
+  h4 = Math.imul(h2 ^ (h4>>>19), 2716044179);
+  return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
+}
+function sfc32(a,b,c,d){
+  return function(){
+    a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+    let t = (a + b) | 0;
+    a = b ^ (b >>> 9);
+    b = c + (c << 3) | 0;
+    c = (c << 21 | c >>> 11);
+    d = d + 1 | 0;
+    t = t + d | 0;
+    c = c + t | 0;
+    return (t >>> 0) / 4294967296;
+  }
+}
+function makeRng(tag){
+  const seedStr = new URLSearchParams(location.search).get('seed') || 'default-seed';
+  const [a,b,c,d] = cyrb128(seedStr + '|' + tag);
+  return sfc32(a,b,c,d);
+}
+function shuffleInPlace(arr, rnd){
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ======= Plot helpers ======= */
 function sampleY(fn, domain, N=200){
   const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
   const ys=xs.map(fn);
@@ -101,21 +143,34 @@ function drawGraph(el, fn, domain, caption){
   el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
 }
 
+/* ======= APP ======= */
 (function init(){
+  const rngItems   = makeRng('items');
+  const rngFigures = makeRng('figs');
+  const rngLetters = makeRng('letters');
+
   const app=document.getElementById("app");
   const items = PROMPTS.map(x=>({...x}));
   const figs  = FIGURES.map(x=>({...x}));
-  shuffle(items); shuffle(figs);
-  const letters="ABCDEF".split(""); figs.forEach((f,i)=> f.letter=letters[i]);
+
+  shuffleInPlace(items,   rngItems);
+  shuffleInPlace(figs,    rngFigures);
+
+  const letters="ABCDEF".split("");
+  shuffleInPlace(letters, rngLetters);
+  figs.forEach((f,i)=> f.letter=letters[i]);
+
   const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
   const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
   const phase="pre";
 
-  // helper: prompt -> accepted figure IDs
   function getAcceptIds(spec){
     if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
     if (spec.correct) return [spec.correct];
     return [];
+  }
+  function mappingFromId(id){
+    return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
   }
 
   const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
@@ -127,7 +182,9 @@ function drawGraph(el, fn, domain, caption){
   const selects=[];
   items.forEach((it, idx)=>{
     const card=document.createElement("div"); card.className="item";
-    const title=document.createElement("div"); title.innerHTML=`<span class="label">Sound ${idx+1}</span>`;
+    const map = mappingFromId(it.id);
+    const title=document.createElement("div");
+    title.innerHTML=`<span class="label">Sound ${idx+1}</span><span class="maptag" title="${map.long}">${map.short}</span>`;
     const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
     const sel=document.createElement("select");
     sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
@@ -168,14 +225,12 @@ function drawGraph(el, fn, domain, caption){
       const ok = acceptLetters.includes(chosen);
       if(ok) correct++;
 
-      // ✔ / ✖ mark
       const mark=document.createElement("span");
       mark.className = ok ? "ok" : "bad";
       mark.style.marginLeft="8px";
       mark.textContent = ok ? "✔" : "✖";
       s.sel.after(mark);
 
-      // Show the answer key (handles multiple accepted)
       const ans=document.createElement("div");
       ans.className="muted answer";
       const letterText = acceptLetters.join(" or ");
@@ -200,7 +255,6 @@ function drawGraph(el, fn, domain, caption){
   btnReset.addEventListener("click", ()=>{
     selects.forEach(s=>{
       s.sel.value=""; s.sel.disabled=false;
-      // remove ✔/✖ and the shown answers
       let n = s.sel.nextSibling;
       while(n){
         const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
