@@ -1,265 +1,409 @@
 <!doctype html>
-<title>Hearing Functions: Posttest (Part B)</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-  :root{--w:160px; --h:120px}
-  body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:1000px;margin:24px auto;padding:0 12px;line-height:1.4}
-  h1{font-size:1.4rem;margin:.25rem 0 .6rem}
-  .section{border:1px solid #ddd;border-radius:12px;padding:12px;margin:14px 0;background:#fafafa}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .audios .item{border:1px solid #ddd;border-radius:10px;padding:10px;background:white;margin-bottom:10px}
-  .label{font-weight:600}
-  .legend{margin:-6px 0 10px;color:#444;font-size:.95rem}
-  .maptag{display:inline-block;margin:0 .35rem 0 .5rem;font-size:.78rem;border:1px solid #b9cdf9;background:#e8eefc;border-radius:8px;padding:2px 8px}
-  .figs{display:grid;grid-template-columns:repeat(3, minmax(var(--w), 1fr));gap:12px}
-  .fig{position:relative;border:1px solid #ddd;border-radius:10px;background:white;padding:8px}
-  .badge{position:absolute;left:8px;top:8px;background:#333;color:#fff;border-radius:8px;padding:2px 8px;font-size:.8rem}
-  svg{width:100%;height:auto;max-width:var(--w);max-height:var(--h);display:block;margin:0 auto}
-  select{padding:.35rem;border-radius:8px;border:1px solid #bbb}
-  .controls{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-  button{padding:.55rem .9rem;border-radius:10px;border:1px solid #bbb;background:#f5f5f5;cursor:pointer}
-  .score{font-weight:700}
-  .ok{color:#0a7a26}
-  .bad{color:#c00}
-  .muted{color:#666;font-size:.92rem}
-  .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
-  .homebtn{display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;text-decoration:none;color:#111;font-weight:600}
-  .homebtn:hover{background:#eee;}
-</style>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hearing Functions: Posttest (Part B)</title>
+  <style>
+    :root{ --w:160px; --h:120px }
+    body{
+      font-family:system-ui, Segoe UI, Helvetica, Arial, sans-serif;
+      max-width:1000px; margin:24px auto; padding:0 12px; line-height:1.4;
+    }
+    h1{ font-size:1.4rem; margin:.25rem 0 .6rem }
+    .section{ border:1px solid #ddd; border-radius:12px; padding:12px; margin:14px 0; background:#fafafa }
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
+    .audios .item{ border:1px solid #ddd; border-radius:10px; padding:10px; background:white; margin-bottom:10px }
+    .label{ font-weight:600 }
+    .legend{ margin:-6px 0 10px; color:#444; font-size:.95rem }
+    .maptag{ display:inline-block; margin:0 .35rem 0 .5rem; font-size:.78rem; border:1px solid #b9cdf9; background:#e8eefc; border-radius:8px; padding:2px 8px }
+    .figs{ display:grid; grid-template-columns:repeat(3, minmax(var(--w), 1fr)); gap:12px }
+    .fig{ position:relative; border:1px solid #ddd; border-radius:10px; background:white; padding:8px }
+    .badge{ position:absolute; left:8px; top:8px; background:#333; color:#fff; border-radius:8px; padding:2px 8px; font-size:.8rem }
+    svg{ width:100%; height:auto; max-width:var(--w); max-height:var(--h); display:block; margin:0 auto }
+    select, input[type="text"]{ padding:.35rem; border-radius:8px; border:1px solid #bbb }
+    textarea{ width:100%; padding:.55rem; border:1px solid #bbb; border-radius:8px }
+    .controls{ display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap }
+    button{ padding:.55rem .9rem; border-radius:10px; border:1px solid #bbb; background:#f5f5f5; cursor:pointer }
+    .score{ font-weight:700 }
+    .ok{ color:#0a7a26 }
+    .bad{ color:#c00 }
+    .muted{ color:#666; font-size:.92rem }
+    .homebar{ display:flex; justify-content:flex-start; align-items:center; margin:8px 0 12px }
+    .homebtn{ display:inline-block; padding:.5rem .9rem; border:1px solid #bbb; border-radius:10px; background:#f5f5f5; text-decoration:none; color:#111; font-weight:600 }
+    .homebtn:hover{ background:#eee; }
+  </style>
+</head>
+<body>
+  <div class="homebar">
+    <a class="homebtn" href="index.html">🏠 Home</a>
+  </div>
 
-<div class="homebar">
-  <a class="homebtn" href="index.html">🏠 Home</a>
-</div>
+  <h1>Hearing Functions: Posttest (Part B)</h1>
+  <p class="legend">
+    <span class="maptag" title="Value → Pitch">V2P</span> pitch tracks height.
+    <span class="maptag" title="Slope → Pitch">S2P</span> pitch tracks slope (rate of change).
+  </p>
+  <p class="muted">
+    Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo
+    (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
+  </p>
 
-<h1>Hearing Functions: Posttest (Part B)</h1>
-<p class="legend">
-  <span class="maptag" title="Value → Pitch">V2P</span> pitch tracks height.
-  <span class="maptag" title="Slope → Pitch">S2P</span> pitch tracks slope (rate of change).
-</p>
-<p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
+  <!-- Optional participant code to pair results (stored in localStorage only) -->
+  <div class="muted" style="margin:10px 0 14px">
+    <label for="pid" style="font-weight:600">Participant code (optional):</label>
+    <input id="pid" type="text" inputmode="text" pattern="[A-Za-z0-9_-]{1,24}"
+           placeholder="e.g., 11-Demeter-07"
+           style="margin-left:8px;min-width:220px" />
+  </div>
 
-<div id="app"></div>
+  <div id="app"></div>
 
-<script>
-/* ======= CONFIG: 6-item Posttest (Form B) ======= */
-const PROMPTS = [
-  // V2P
-  { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast" },
-  { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow" },
-  { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast" },
-  // S2P
-  { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir" },
-  { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos" },
-  { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg" },
-];
+  <script>
+  /* ======= CONFIG: 6-item Posttest (Form B) ======= */
+  const PROMPTS = [
+    // V2P
+    { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast" },
+    { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow" },
+    { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast" },
+    // S2P
+    { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir" },
+    { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos" },
+    { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg" },
+  ];
 
-const FIGURES = [
-  // V2P figures
-  { id:"g_lin_pos_fast", fn:(x)=>1.20*x,                 domain:[-5,5], caption:"y = 1.2x" },
-  { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,                domain:[-5,5], caption:"y = -0.2x" },
-  { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
+  const FIGURES = [
+    // V2P figures
+    { id:"g_lin_pos_fast", fn:(x)=>1.20*x,                 domain:[-5,5], caption:"y = 1.2x" },
+    { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,                domain:[-5,5], caption:"y = -0.2x" },
+    { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
 
-  // S2P figures
-  { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x)" },
-  { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2]" },
-  { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
-];
+    // S2P figures
+    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x)" },
+    { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2]" },
+    { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
+  ];
 
-/* ======= Seeded RNG: use ?seed=... to lock order and letters ======= */
-function cyrb128(str){
-  let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
-  for (let i=0, k; i<str.length; i++) {
-    k = str.charCodeAt(i);
-    h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
-    h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
-    h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
-    h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+  /* ======= Seeded RNG: use ?seed=... to lock order and letters ======= */
+  function cyrb128(str){
+    let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
+    for (let i=0, k; i<str.length; i++) {
+      k = str.charCodeAt(i);
+      h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
+      h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+      h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
+      h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    h1 = Math.imul(h3 ^ (h1>>>18), 597399067);
+    h2 = Math.imul(h4 ^ (h2>>>22), 2869860233);
+    h3 = Math.imul(h1 ^ (h3>>>17), 951274213);
+    h4 = Math.imul(h2 ^ (h4>>>19), 2716044179);
+    return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
   }
-  h1 = Math.imul(h3 ^ (h1>>>18), 597399067);
-  h2 = Math.imul(h4 ^ (h2>>>22), 2869860233);
-  h3 = Math.imul(h1 ^ (h3>>>17), 951274213);
-  h4 = Math.imul(h2 ^ (h4>>>19), 2716044179);
-  return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
-}
-function sfc32(a,b,c,d){
-  return function(){
-    a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
-    let t = (a + b) | 0;
-    a = b ^ (b >>> 9);
-    b = c + (c << 3) | 0;
-    c = (c << 21 | c >>> 11);
-    d = d + 1 | 0;
-    t = t + d | 0;
-    c = c + t | 0;
-    return (t >>> 0) / 4294967296;
+  function sfc32(a,b,c,d){
+    return function(){
+      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+      let t = (a + b) | 0;
+      a = b ^ (b >>> 9);
+      b = c + (c << 3) | 0;
+      c = (c << 21 | c >>> 11);
+      d = d + 1 | 0;
+      t = t + d | 0;
+      c = c + t | 0;
+      return (t >>> 0) / 4294967296;
+    }
   }
-}
-function makeRng(tag){
-  const seedStr = new URLSearchParams(location.search).get('seed') || 'default-seed';
-  const [a,b,c,d] = cyrb128(seedStr + '|' + tag);
-  return sfc32(a,b,c,d);
-}
-function shuffleInPlace(arr, rnd){
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  function makeRng(tag){
+    const seedStr = new URLSearchParams(location.search).get('seed') || 'default-seed';
+    const [a,b,c,d] = cyrb128(seedStr + '|' + tag);
+    return sfc32(a,b,c,d);
   }
-  return arr;
-}
-
-/* ======= Plot helpers ======= */
-function sampleY(fn, domain, N=200){
-  const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
-  const ys=xs.map(fn);
-  let ymin=Math.min(...ys), ymax=Math.max(...ys);
-  if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
-  if(ymax-ymin<1e-6){ymax=ymin+1;}
-  const pad=0.1*(ymax-ymin);
-  return {xs, ys, ymin:ymin-pad, ymax:ymax+pad};
-}
-const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
-const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
-
-function drawGraph(el, fn, domain, caption){
-  const W=160,H=120, NS="http://www.w3.org/2000/svg";
-  const svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-  const {xs,ys,ymin,ymax}=sampleY(fn, domain, 200);
-  if(domain[0]<=0 && domain[1]>=0){
-    const x0=mapX(0,domain[0],domain[1],W);
-    const l=document.createElementNS(NS,"line"); l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
-  }
-  if(ymin<=0 && ymax>=0){
-    const y0=mapY(0,ymin,ymax,H);
-    const l=document.createElementNS(NS,"line"); l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
-  }
-  let d=""; for(let i=0;i<xs.length;i++){const X=mapX(xs[i],domain[0],domain[1],W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);}
-  const path=document.createElementNS(NS,"path"); path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2"); svg.appendChild(path);
-  const cap=document.createElement("div"); cap.className="muted"; cap.style.textAlign="center"; cap.style.marginTop="4px"; cap.textContent=caption||"";
-  el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
-}
-
-/* ======= APP ======= */
-(function init(){
-  const rngItems   = makeRng('items');
-  const rngFigures = makeRng('figs');
-  const rngLetters = makeRng('letters');
-
-  const app=document.getElementById("app");
-  const items = PROMPTS.map(x=>({...x}));
-  const figs  = FIGURES.map(x=>({...x}));
-
-  shuffleInPlace(items,   rngItems);
-  shuffleInPlace(figs,    rngFigures);
-
-  const letters="ABCDEF".split("");
-  shuffleInPlace(letters, rngLetters);
-  figs.forEach((f,i)=> f.letter=letters[i]);
-
-  const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
-  const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
-  const phase="post";
-
-  function getAcceptIds(spec){
-    if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
-    if (spec.correct) return [spec.correct];
-    return [];
-  }
-  function mappingFromId(id){
-    return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
+  function shuffleInPlace(arr, rnd){
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
-  const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
-  const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
+  /* ======= Plot helpers ======= */
+  function sampleY(fn, domain, N=200){
+    const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
+    const ys=xs.map(fn);
+    let ymin=Math.min(...ys), ymax=Math.max(...ys);
+    if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
+    if(ymax-ymin<1e-6){ymax=ymin+1;}
+    const pad=0.1*(ymax-ymin);
+    return {xs, ys, ymin:ymin-pad, ymax:ymax+pad};
+  }
+  const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
+  const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
 
-  const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
-  const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
+  function drawGraph(el, fn, domain, caption){
+    const W=160, H=120, NS="http://www.w3.org/2000/svg";
+    const svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+    const {xs,ys,ymin,ymax}=sampleY(fn, domain, 200);
+    if(domain[0]<=0 && domain[1]>=0){
+      const x0=mapX(0,domain[0],domain[1],W);
+      const l=document.createElementNS(NS,"line");
+      l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H);
+      l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+    }
+    if(ymin<=0 && ymax>=0){
+      const y0=mapY(0,ymin,ymax,H);
+      const l=document.createElementNS(NS,"line");
+      l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0);
+      l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+    }
+    let d=""; for(let i=0;i<xs.length;i++){
+      const X=mapX(xs[i],domain[0],domain[1],W), Y=mapY(ys[i],ymin,ymax,H);
+      d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);
+    }
+    const path=document.createElementNS(NS,"path");
+    path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2");
+    svg.appendChild(path);
+    const cap=document.createElement("div"); cap.className="muted"; cap.style.textAlign="center"; cap.style.marginTop="4px"; cap.textContent=caption||"";
+    el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
+  }
 
-  const selects=[];
-  items.forEach((it, idx)=>{
-    const card=document.createElement("div"); card.className="item";
-    const map = mappingFromId(it.id);
-    const title=document.createElement("div");
-    title.innerHTML=`<span class="label">Sound ${idx+1}</span><span class="maptag" title="${map.long}">${map.short}</span>`;
-    const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
-    const sel=document.createElement("select");
-    sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
-    selects.push({sel, item:it});
-    card.appendChild(title); card.appendChild(player); card.appendChild(document.createElement("br")); card.appendChild(sel);
-    left.appendChild(card);
-  });
+  /* ======= PID helpers ======= */
+  function wirePIDPersistence(){
+    const inp = document.getElementById('pid');
+    if (!inp) return;
+    try {
+      const saved = localStorage.getItem('hf_pid') || '';
+      if (saved && !inp.value) inp.value = saved;
+    } catch(e){}
+    inp.addEventListener('change', ()=>{
+      const v = (inp.value||'').trim();
+      try { if (v) localStorage.setItem('hf_pid', v); } catch(e){}
+    });
+  }
+  function getPID(){
+    const inp = document.getElementById('pid');
+    if (!inp) return '';
+    const v = (inp.value||'').trim();
+    if (v) return v;
+    try { return (localStorage.getItem('hf_pid')||'').trim(); } catch(e){ return ''; }
+  }
 
-  figs.forEach(f=>{
-    const box=document.createElement("div"); box.className="fig";
-    const badge=document.createElement("div"); badge.className="badge"; badge.textContent=f.letter;
-    const plot=document.createElement("div");
-    box.appendChild(badge); box.appendChild(plot);
-    right.appendChild(box);
-    drawGraph(plot, f.fn, f.domain, f.caption);
-  });
+  /* ======= APP ======= */
+  (function init(){
+    wirePIDPersistence();
 
-  const controls=document.createElement("div"); controls.className="controls";
-  const btnCheck=document.createElement("button"); btnCheck.textContent="Check answers"; btnCheck.disabled=true;
-  const btnReset=document.createElement("button"); btnReset.textContent="Reset";
-  const btnCSV=document.createElement("button"); btnCSV.textContent="Download CSV"; btnCSV.style.display="none";
-  const out=document.createElement("span"); out.className="score";
-  controls.append(btnCheck, btnReset, out, btnCSV); sec.appendChild(controls);
+    const rngItems   = makeRng('items');
+    const rngFigures = makeRng('figs');
+    const rngLetters = makeRng('letters');
 
-  function updateEnable(){ btnCheck.disabled = selects.some(s=>!s.sel.value); }
-  selects.forEach(s=> s.sel.addEventListener("change", updateEnable)); updateEnable();
+    const app=document.getElementById("app");
+    const items = PROMPTS.map(x=>({...x}));
+    const figs  = FIGURES.map(x=>({...x}));
 
-  btnCheck.addEventListener("click", ()=>{
-    let correct=0;
-    const rows=[["phase","audio_id","chosen_letter","accepted_letters","is_correct"]];
+    shuffleInPlace(items,   rngItems);
+    shuffleInPlace(figs,    rngFigures);
 
-    selects.forEach((s,i)=>{
-      const chosen = s.sel.value;
-      const spec = PROMPTS.find(p=>p.id===s.item.id);
-      const acceptIds = getAcceptIds(spec);
-      const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
-      const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
-      const ok = acceptLetters.includes(chosen);
-      if(ok) correct++;
+    const letters="ABCDEF".split("");
+    shuffleInPlace(letters, rngLetters);
+    figs.forEach((f,i)=> f.letter=letters[i]);
 
-      const mark=document.createElement("span");
-      mark.className = ok ? "ok" : "bad";
-      mark.style.marginLeft="8px";
-      mark.textContent = ok ? "✔" : "✖";
-      s.sel.after(mark);
+    const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
+    const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
+    const phase="post";
 
-      const ans=document.createElement("div");
-      ans.className="muted answer";
-      const letterText = acceptLetters.join(" or ");
-      const capText    = acceptCaps.join(" / ");
-      ans.textContent  = `Correct: ${letterText}${capText ? " — " + capText : ""}`;
-      mark.after(ans);
+    function getAcceptIds(spec){
+      if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
+      if (spec.correct) return [spec.correct];
+      return [];
+    }
+    function mappingFromId(id){
+      return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
+    }
 
-      rows.push([phase, s.item.id, chosen, letterText, ok]);
-      s.sel.disabled=true;
+    const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
+    const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
+
+    const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
+    const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
+
+    const selects=[];
+    items.forEach((it, idx)=>{
+      const card=document.createElement("div"); card.className="item";
+      const map = mappingFromId(it.id);
+      const title=document.createElement("div");
+      title.innerHTML=`<span class="label">Sound ${idx+1}</span><span class="maptag" title="${map.long}">${map.short}</span>`;
+      const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
+      const sel=document.createElement("select");
+      const selId=`sel_${idx}`;
+      sel.id = selId;
+      sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
+      const lab=document.createElement("label"); lab.setAttribute("for", selId); lab.className="muted"; lab.style.display="inline-block"; lab.style.marginTop="6px"; lab.textContent="Choose figure…";
+
+      selects.push({sel, item:it});
+      card.appendChild(title);
+      card.appendChild(player);
+      card.appendChild(document.createElement("br"));
+      card.appendChild(lab);
+      card.appendChild(sel);
+      left.appendChild(card);
     });
 
-    out.textContent=` Score: ${correct} / ${selects.length}`;
-    btnCSV.style.display="inline-block";
-    btnCSV.onclick=()=>{
-      const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
-      const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement("a");
-      a.href=URL.createObjectURL(blob); a.download=`results_${phase}_${Date.now()}.csv`; a.click();
+    figs.forEach(f=>{
+      const box=document.createElement("div"); box.className="fig";
+      const badge=document.createElement("div"); badge.className="badge"; badge.textContent=f.letter;
+      const plot=document.createElement("div");
+      box.appendChild(badge); box.appendChild(plot);
+      right.appendChild(box);
+      drawGraph(plot, f.fn, f.domain, f.caption);
+    });
+
+    const controls=document.createElement("div"); controls.className="controls";
+    const btnCheck=document.createElement("button"); btnCheck.textContent="Check answers"; btnCheck.disabled=true;
+    const btnReset=document.createElement("button"); btnReset.textContent="Reset";
+    const btnCSV=document.createElement("button"); btnCSV.textContent="Download CSV"; btnCSV.style.display="none";
+    const out=document.createElement("span"); out.className="score"; out.id="score"; out.setAttribute("aria-live","polite");
+    controls.append(btnCheck, btnReset, out, btnCSV); sec.appendChild(controls);
+
+    function updateEnable(){ btnCheck.disabled = selects.some(s=>!s.sel.value); }
+    selects.forEach(s=> s.sel.addEventListener("change", updateEnable)); updateEnable();
+
+    btnCheck.addEventListener("click", ()=>{
+      let correct=0;
+      const rows=[["pid","phase","audio_id","chosen_letter","accepted_letters","is_correct","timestamp_iso"]];
+
+      selects.forEach((s,i)=>{
+        const chosen = s.sel.value;
+        const spec = PROMPTS.find(p=>p.id===s.item.id);
+        const acceptIds = getAcceptIds(spec);
+        const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
+        const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
+        const ok = acceptLetters.includes(chosen);
+        if(ok) correct++;
+
+        const mark=document.createElement("span");
+        mark.className = ok ? "ok" : "bad";
+        mark.style.marginLeft="8px";
+        mark.textContent = ok ? "✔" : "✖";
+        s.sel.after(mark);
+
+        const ans=document.createElement("div");
+        ans.className="muted answer";
+        const letterText = acceptLetters.join(" or ");
+        const capText    = acceptCaps.join(" / ");
+        ans.textContent  = `Correct: ${letterText}${capText ? " — " + capText : ""}`;
+        mark.after(ans);
+
+        rows.push([getPID(), phase, s.item.id, chosen, letterText, ok, new Date().toISOString()]);
+        s.sel.disabled=true;
+      });
+
+      out.textContent=` Score: ${correct} / ${selects.length}`;
+      out.setAttribute('aria-label', `Score ${correct} of ${selects.length}`);
+
+      btnCSV.style.display="inline-block";
+      btnCSV.onclick=()=>{
+        const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
+        const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement("a");
+        a.href=URL.createObjectURL(blob); a.download=`results_${phase}_${Date.now()}.csv`; a.click();
+      };
+      btnCheck.disabled=true;
+    });
+
+    btnReset.addEventListener("click", ()=>{
+      selects.forEach(s=>{
+        s.sel.value=""; s.sel.disabled=false;
+        let n = s.sel.nextSibling;
+        while(n){
+          const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
+          const next = n.nextSibling;
+          if(rm) n.remove();
+          n = next;
+        }
+      });
+      out.textContent=""; btnCSV.style.display="none"; updateEnable();
+    });
+
+    /* ======= EXIT SLIP (2–3 minutes) ======= */
+    const exitSec = document.createElement("div");
+    exitSec.className = "section";
+    exitSec.innerHTML = `
+      <h2 style="margin:.2rem 0 .4rem">Exit Slip (2–3 minutes)</h2>
+      <p class="muted" style="margin:.1rem 0 10px">
+        Briefly answer the following:
+        <strong>What did you listen for in S2P?</strong> •
+        <strong>What confused you?</strong>
+      </p>
+      <div class="item" style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px">
+        <label for="es_v2p" class="label">What did you listen for in V2P?</label>
+        <textarea id="es_v2p" rows="3" aria-label="What did you listen for in V2P?"></textarea>
+
+        <label for="es_s2p" class="label" style="display:block;margin-top:10px">What did you listen for in S2P?</label>
+        <textarea id="es_s2p" rows="3" aria-label="What did you listen for in S2P?"></textarea>
+
+        <label for="es_conf" class="label" style="display:block;margin-top:10px">What confused you?</label>
+        <textarea id="es_conf" rows="3" aria-label="What confused you?"></textarea>
+
+        <div class="controls" style="margin-top:10px">
+          <button id="btnExitCSV">Download Exit Slip CSV</button>
+          <span id="esSaved" class="muted" aria-live="polite"></span>
+        </div>
+      </div>
+    `;
+    app.appendChild(exitSec);
+
+    function getStoredPID(){
+      try { return (localStorage.getItem('hf_pid') || '').trim(); }
+      catch(e){ return ''; }
+    }
+    const es = {
+      v2p: exitSec.querySelector('#es_v2p'),
+      s2p: exitSec.querySelector('#es_s2p'),
+      conf: exitSec.querySelector('#es_conf'),
+      saved: exitSec.querySelector('#esSaved'),
+      btn: exitSec.querySelector('#btnExitCSV')
     };
-    btnCheck.disabled=true;
-  });
 
-  btnReset.addEventListener("click", ()=>{
-    selects.forEach(s=>{
-      s.sel.value=""; s.sel.disabled=false;
-      let n = s.sel.nextSibling;
-      while(n){
-        const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
-        const next = n.nextSibling;
-        if(rm) n.remove();
-        n = next;
-      }
+    // restore draft
+    try {
+      const key = 'hf_exit_' + phase; // e.g., hf_exit_post
+      const saved = JSON.parse(localStorage.getItem(key) || '{}');
+      if (saved.v2p) es.v2p.value = saved.v2p;
+      if (saved.s2p) es.s2p.value = saved.s2p;
+      if (saved.conf) es.conf.value = saved.conf;
+    } catch(e){}
+
+    function saveDraft(){
+      try {
+        const key = 'hf_exit_' + phase;
+        localStorage.setItem(key, JSON.stringify({
+          v2p: es.v2p.value, s2p: es.s2p.value, conf: es.conf.value
+        }));
+        es.saved.textContent = 'Draft saved';
+        setTimeout(()=> es.saved.textContent = '', 1200);
+      } catch(e){}
+    }
+    [es.v2p, es.s2p, es.conf].forEach(t => t.addEventListener('input', saveDraft));
+
+    es.btn.addEventListener('click', ()=>{
+      const pid = getPID() || getStoredPID(); // optional; blank if not set
+      const v2pAns = (es.v2p.value || '').trim();
+      const s2pAns = (es.s2p.value || '').trim();
+      const confAns = (es.conf.value || '').trim();
+      const timestamp = new Date().toISOString();
+
+      const rows = [
+        ["pid","phase","v2p_listen","s2p_listen","confusions","timestamp_iso"],
+        [pid, phase, v2pAns, s2pAns, confAns, timestamp]
+      ];
+      const csv = rows
+        .map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(","))
+        .join("\n");
+      const blob = new Blob([csv], {type: "text/csv"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `exit_${phase}_${Date.now()}.csv`;
+      a.click();
     });
-    out.textContent=""; btnCSV.style.display="none"; updateEnable();
-  });
-})();
-</script>
+  })();
+  </script>
+</body>
+</html>
