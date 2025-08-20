@@ -79,14 +79,14 @@
     { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
 
     // S2P figures
-    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x)" },
-    { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2]" },
-    { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
+    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x) (Slope)" },
+    { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2] (Slope)" },
+    { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0] (Slope)" },
   ];
 
   const LETTERS = ['A','B','C','D','E','F']; // fixed ABC / DEF grid
 
-  /* ======= Seeded RNG: use ?seed=... to lock orders ======= */
+  /* ======= Seeded RNG: use ?seed=... to lock orders (not letters) ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -121,7 +121,7 @@
     return sfc32(a,b,c,d);
   }
   function shuffleInPlace(arr, rnd){
-    for (let i = arr.length - 1; i > 0; i++) {
+    for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(rnd() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -193,20 +193,20 @@
   (function init(){
     wirePIDPersistence();
 
-    const rngItems   = makeRng('items');   // shuffles audio order
-    const rngFigures = makeRng('figs');    // shuffles which graph sits under each fixed letter
+    const rngItems   = makeRng('items');   // shuffle audio order
+    const rngFigures = makeRng('figs');    // shuffle which graph sits under each fixed letter
 
     const app=document.getElementById("app");
-    const items = PROMPTS.map(x=>({...x}));
 
-    // 1) Shuffle audio prompts order (seeded)
+    // 1) Shuffle audio order (seeded)
+    const items = PROMPTS.map(x=>({...x}));
     shuffleInPlace(items, rngItems);
 
-    // 2) Shuffle figure assignment to fixed letters A..F (seeded)
+    // 2) Shuffle figure assignment to fixed letters ABC/DEF (seeded)
     const figsShuffled = FIGURES.map(f=>({...f}));
     shuffleInPlace(figsShuffled, rngFigures);
 
-    // Map each fixed letter to a shuffled figure, plus reverse map figId -> letter
+    // Map each fixed letter to a (shuffled) figure, and build reverse map figId -> letter
     const letterToFig = {};
     const letterByFigId = {};
     const captionByFigId = {};
@@ -284,9 +284,9 @@
       let correct=0;
       const rows=[["pid","phase","audio_id","chosen_letter","accepted_letters","is_correct","timestamp_iso"]];
 
-      selects.forEach((s,i)=>{
+      selects.forEach((s)=>{
         const chosen = s.sel.value;
-        const spec = PROMPTS.find(p=>p.id===s.item.id);
+        const spec = items.find(p=>p.id===s.item.id);
         const acceptIds = getAcceptIds(spec);
         const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
         const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
