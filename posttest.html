@@ -84,7 +84,9 @@
     { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0]" },
   ];
 
-  /* ======= Seeded RNG: use ?seed=... to lock order and letters ======= */
+  const LETTERS = ['A','B','C','D','E','F']; // fixed ABC / DEF grid
+
+  /* ======= Seeded RNG: use ?seed=... to lock orders ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -119,7 +121,7 @@
     return sfc32(a,b,c,d);
   }
   function shuffleInPlace(arr, rnd){
-    for (let i = arr.length - 1; i > 0; i--) {
+    for (let i = arr.length - 1; i > 0; i++) {
       const j = Math.floor(rnd() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -191,23 +193,30 @@
   (function init(){
     wirePIDPersistence();
 
-    const rngItems   = makeRng('items');
-    const rngFigures = makeRng('figs');
-    const rngLetters = makeRng('letters');
+    const rngItems   = makeRng('items');   // shuffles audio order
+    const rngFigures = makeRng('figs');    // shuffles which graph sits under each fixed letter
 
     const app=document.getElementById("app");
     const items = PROMPTS.map(x=>({...x}));
-    const figs  = FIGURES.map(x=>({...x}));
 
-    shuffleInPlace(items,   rngItems);
-    shuffleInPlace(figs,    rngFigures);
+    // 1) Shuffle audio prompts order (seeded)
+    shuffleInPlace(items, rngItems);
 
-    const letters="ABCDEF".split("");
-    shuffleInPlace(letters, rngLetters);
-    figs.forEach((f,i)=> f.letter=letters[i]);
+    // 2) Shuffle figure assignment to fixed letters A..F (seeded)
+    const figsShuffled = FIGURES.map(f=>({...f}));
+    shuffleInPlace(figsShuffled, rngFigures);
 
-    const letterByFigId=Object.fromEntries(figs.map(f=>[f.id,f.letter]));
-    const captionByFigId=Object.fromEntries(figs.map(f=>[f.id, f.caption || ""]));
+    // Map each fixed letter to a shuffled figure, plus reverse map figId -> letter
+    const letterToFig = {};
+    const letterByFigId = {};
+    const captionByFigId = {};
+    LETTERS.forEach((L, i)=>{
+      const f = figsShuffled[i];
+      letterToFig[L] = f;
+      letterByFigId[f.id] = L;
+      captionByFigId[f.id] = f.caption || "";
+    });
+
     const phase="post";
 
     function getAcceptIds(spec){
@@ -219,12 +228,14 @@
       return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
     }
 
+    // Layout containers
     const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
     const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
 
     const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
     const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
 
+    // LEFT: audio cards (order shuffled by seed)
     const selects=[];
     items.forEach((it, idx)=>{
       const card=document.createElement("div"); card.className="item";
@@ -235,7 +246,7 @@
       const sel=document.createElement("select");
       const selId=`sel_${idx}`;
       sel.id = selId;
-      sel.innerHTML=`<option value="">Choose figure…</option>` + figs.map(f=>`<option value="${f.letter}">${f.letter}</option>`).join("");
+      sel.innerHTML=`<option value="">Choose figure…</option>` + LETTERS.map(L=>`<option value="${L}">${L}</option>`).join("");
       const lab=document.createElement("label"); lab.setAttribute("for", selId); lab.className="muted"; lab.style.display="inline-block"; lab.style.marginTop="6px"; lab.textContent="Choose figure…";
 
       selects.push({sel, item:it});
@@ -247,15 +258,18 @@
       left.appendChild(card);
     });
 
-    figs.forEach(f=>{
+    // RIGHT: fixed ABC / DEF grid; graphs vary per seed
+    LETTERS.forEach(L=>{
+      const f = letterToFig[L];
       const box=document.createElement("div"); box.className="fig";
-      const badge=document.createElement("div"); badge.className="badge"; badge.textContent=f.letter;
+      const badge=document.createElement("div"); badge.className="badge"; badge.textContent=L;
       const plot=document.createElement("div");
       box.appendChild(badge); box.appendChild(plot);
       right.appendChild(box);
       drawGraph(plot, f.fn, f.domain, f.caption);
     });
 
+    // Controls
     const controls=document.createElement("div"); controls.className="controls";
     const btnCheck=document.createElement("button"); btnCheck.textContent="Check answers"; btnCheck.disabled=true;
     const btnReset=document.createElement("button"); btnReset.textContent="Reset";
@@ -329,6 +343,7 @@
       <h2 style="margin:.2rem 0 .4rem">Exit Slip (2–3 minutes)</h2>
       <p class="muted" style="margin:.1rem 0 10px">
         Briefly answer the following:
+        <strong>What did you listen for in V2P?</strong> •
         <strong>What did you listen for in S2P?</strong> •
         <strong>What confused you?</strong>
       </p>
