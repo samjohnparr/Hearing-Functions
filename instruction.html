@@ -53,6 +53,7 @@
   .btn:hover{background:#eee}
   .tnote{display:none;border-left:4px solid #6aa3ff;background:#f1f6ff;padding:.6rem .7rem;margin:.6rem 0;border-radius:8px}
   body.show-notes .tnote{display:block}
+  .tnote .codes{margin:.4rem 0 0}
 
   /* Home button */
   .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
@@ -99,6 +100,17 @@
     <li>Explain how graph <em>rate of change</em> (slope) maps to pitch in S2P.</li>
     <li>Match sounds to graphs (and vice versa) for linear, exponential/log, quadratic, and logistic examples.</li>
   </ul>
+
+  <h3>Aligned competencies 
+  <div class="codes">
+    <span class="badge">M11GM-Ia-1</span>
+    <span class="badge">M11GM-Ia-4</span>
+    <span class="badge">M11GM-Ie-3</span>
+    <span class="badge">M11GM-If-2</span>
+    <span class="badge">M11GM-Ig-1</span>
+    <span class="badge">M11GM-Ih-1</span>
+    <span class="badge">M11GM-Ij-1</span>
+  </div>
 
   <h3>Before Class (5–10 min)</h3>
   <ul>
@@ -220,7 +232,8 @@ const V2P = [
     ask:[
       "If the line were twice as steep, how would the sound change?",
       "Where is the lowest note? Where is the highest?"
-    ]
+    ],
+    codes:["M11GM-Ia-1","M11GM-Ia-4"]
   },
   {
     id:"PRAC_V2P_linear_neg_very_steep", label:"Line going down (very steep)",
@@ -230,7 +243,8 @@ const V2P = [
     ask:[
       "How does this compare to the gentle line?",
       "What part of the clip changes the most in pitch?"
-    ]
+    ],
+    codes:["M11GM-Ia-1","M11GM-Ia-4"]
   },
   {
     id:"PRAC_V2P_exponential_slow", label:"Exponential up (starts slow, then faster)",
@@ -240,7 +254,8 @@ const V2P = [
     ask:[
       "Where does the biggest jump in pitch happen?",
       "What would a ‘reverse’ of this sound like?"
-    ]
+    ],
+    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
   },
   {
     id:"PRAC_V2P_exponential_decay", label:"Exponential down (fast drop, then levels)",
@@ -250,7 +265,8 @@ const V2P = [
     ask:[
       "Why does the pitch change less near the end?",
       "Where would the middle note be compared to start/end?"
-    ]
+    ],
+    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
   },
 ];
 
@@ -263,7 +279,8 @@ const S2P = [
     ask:[
       "At x=1 the slope is 0. What part of the sound does that feel like?",
       "How would this differ if we used V2P instead?"
-    ]
+    ],
+    codes:["M11GM-Ia-1","M11GM-Ia-4"]
   },
   {
     id:"PRAC_S2P_log_wider", label:"Log shape going down",
@@ -273,7 +290,8 @@ const S2P = [
     ask:[
       "Where is the change fastest? How do you know from the sound?",
       "What happens to pitch if we shift the domain to larger x-values?"
-    ]
+    ],
+    codes:["M11GM-Ih-1","M11GM-Ij-1","M11GM-Ia-4"]
   },
   {
     id:"PRAC_S2P_logistic", label:"Logistic (fastest in the middle)",
@@ -283,7 +301,8 @@ const S2P = [
     ask:[
       "How can the function keep rising while the pitch falls at the end?",
       "Where would you place the inflection point from the sound alone?"
-    ]
+    ],
+    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1","M11GM-Ia-4"]
   },
 ];
 
@@ -298,13 +317,15 @@ function makeCard(entry, mapping, mount){
   const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What you'll hear:</span> ${entry.listen}`;
   const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Why it sounds like that:</span> ${entry.discuss}`;
 
-  // Teacher prompts (hidden unless notes are shown)
+  // Teacher prompts + competency codes (hidden unless notes are shown)
   const tbox=document.createElement("div"); tbox.className="tnote";
   const hints = (entry.ask||[]).map(q=>`<li>${q}</li>`).join("");
+  const codeBadges = (entry.codes||[]).map(c=>`<span class="badge">${c}</span>`).join(" ");
   tbox.innerHTML = `
     <div><strong>Teacher prompts</strong> <span class="badge">Think–Pair–Share ready</span></div>
     <ul>${hints || "<li>Ask students to predict before playing, then justify after.</li>"}</ul>
     <div style="margin-top:.4rem"><em>Tip:</em> Play twice — once blind (predict), once with the graph in view.</div>
+    ${codeBadges ? `<div style="margin-top:.5rem"><strong>Competency codes:</strong> ${codeBadges}</div>` : ""}
   `;
 
   card.appendChild(head);
