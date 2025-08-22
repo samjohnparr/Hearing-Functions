@@ -1,0 +1,137 @@
+[
+  {
+    "name": "PRE_V2P_lin_inc_gentle",
+    "file": "PRE_V2P_lin_inc_gentle.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRE_V2P_lin_dec_gentle",
+    "file": "PRE_V2P_lin_dec_gentle.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRE_V2P_constant",
+    "file": "PRE_V2P_constant.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRE_V2P_exp_up",
+    "file": "PRE_V2P_exp_up.wav",
+    "mode": "V2P",
+    "domain": [
+      -4,
+      4
+    ]
+  },
+  {
+    "name": "PRE_V2P_exp_decay",
+    "file": "PRE_V2P_exp_decay.wav",
+    "mode": "V2P",
+    "domain": [
+      -4,
+      4
+    ]
+  },
+  {
+    "name": "PRE_S2P_linear_const",
+    "file": "PRE_S2P_linear_const.wav",
+    "mode": "S2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRE_S2P_quad_up",
+    "file": "PRE_S2P_quad_up.wav",
+    "mode": "S2P",
+    "domain": [
+      0,
+      4
+    ]
+  },
+  {
+    "name": "PRE_S2P_sqrt_down",
+    "file": "PRE_S2P_sqrt_down.wav",
+    "mode": "S2P",
+    "domain": [
+      0.1,
+      4
+    ]
+  },
+  {
+    "name": "PRE_S2P_log_down",
+    "file": "PRE_S2P_log_down.wav",
+    "mode": "S2P",
+    "domain": [
+      0.1,
+      4
+    ]
+  },
+  {
+    "name": "PRE_S2P_logistic_peak",
+    "file": "PRE_S2P_logistic_peak.wav",
+    "mode": "S2P",
+    "domain": [
+      -4,
+      4
+    ]
+  },
+  {
+    "name": "PRE_S2P_cubic_pos",
+    "file": "PRE_S2P_cubic_pos.wav",
+    "mode": "S2P",
+    "domain": [
+      0,
+      2
+    ]
+  },
+  {
+    "name": "PRE_S2P_cubic_neg",
+    "file": "PRE_S2P_cubic_neg.wav",
+    "mode": "S2P",
+    "domain": [
+      -2,
+      0
+    ]
+  },
+  {
+    "name": "PRE_S2P_piece_up_flat",
+    "file": "PRE_S2P_piece_up_flat.wav",
+    "mode": "S2P",
+    "domain": [
+      0,
+      2
+    ]
+  },
+  {
+    "name": "PRE_V2P_lin_inc_gentler",
+    "file": "PRE_V2P_lin_inc_gentler.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRE_V2P_lin_dec_steeper",
+    "file": "PRE_V2P_lin_dec_steeper.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  }
+]

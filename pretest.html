@@ -6,7 +6,7 @@
   <title>Hearing Functions: Pretest (Part A)</title>
   <style>
     :root{--w:160px; --h:120px}
-    body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:1000px;margin:24px auto;padding:0 12px;line-height:1.4}
+    body{font-family:system-ui,Segoe UI,Helvetica,Arial,sans-serif;max-width:1100px;margin:24px auto;padding:0 12px;line-height:1.4}
     h1{font-size:1.4rem;margin:.25rem 0 .6rem}
     .section{border:1px solid #ddd;border-radius:12px;padding:12px;margin:14px 0;background:#fafafa}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -14,7 +14,7 @@
     .label{font-weight:600}
     .legend{margin:-6px 0 10px;color:#444;font-size:.95rem}
     .maptag{display:inline-block;margin:0 .35rem 0 .5rem;font-size:.78rem;border:1px solid #b9cdf9;background:#e8eefc;border-radius:8px;padding:2px 8px}
-    .figs{display:grid;grid-template-columns:repeat(3, minmax(var(--w), 1fr));gap:12px}
+    .figs{display:grid;grid-template-columns:repeat(5, minmax(var(--w), 1fr));gap:12px}
     .fig{position:relative;border:1px solid #ddd;border-radius:10px;background:white;padding:8px}
     .badge{position:absolute;left:8px;top:8px;background:#333;color:#fff;border-radius:8px;padding:2px 8px;font-size:.8rem}
     svg{width:100%;height:auto;max-width:var(--w);max-height:var(--h);display:block;margin:0 auto}
@@ -40,7 +40,7 @@
     <span class="maptag" title="Value → Pitch">V2P</span> pitch tracks height.
     <span class="maptag" title="Slope → Pitch">S2P</span> pitch tracks slope (rate of change).
   </p>
-  <p class="muted">Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
+  <p class="muted">Choose the letter of the figure (A–O) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
 
   <!-- Participant code (optional; saved to localStorage and included in CSV) -->
   <div class="muted" style="margin:10px 0 14px">
@@ -53,37 +53,55 @@
   <div id="app"></div>
 
   <script>
-  /* ======= CONFIG: 6-item Pretest (Form A) ======= */
+  /* ======= CONFIG: 15-item Pretest (Form A) ======= */
+  // Use the filenames you generated in Colab; swap freely if you prefer other clips.
   const PROMPTS = [
-    // V2P (value -> pitch)
-    { id:"V2P_linear_pos_slow",  src:"audio/V2P_linear_pos_slow.wav",  correct:"g_lin_pos_slow" },
-    { id:"V2P_linear_neg_fast",  src:"audio/V2P_linear_neg_fast.wav",  correct:"g_lin_neg_fast" },
-    // constant-tone: accept either y=2 or linear (constant slope)
-    { id:"V2P_constant",         src:"audio/V2P_constant.wav",         accept:["g_const","g_linear"] },
+    // --- V2P (value -> pitch) ---
+    { id:"V2P_linear_pos_slow",   src:"audio/V2P_linear_pos_slow.wav",   correct:"g_lin_pos_slow" },
+    { id:"V2P_linear_neg_fast",   src:"audio/V2P_linear_neg_fast.wav",   correct:"g_lin_neg_fast" },
+    { id:"V2P_constant",          src:"audio/V2P_constant.wav",          accept:["g_const","g_linear"] },
+    { id:"V2P_linear_pos_fast",   src:"audio/V2P_linear_pos_fast.wav",   correct:"g_lin_pos_fast" },
+    { id:"V2P_linear_neg_slow",   src:"audio/V2P_linear_neg_slow.wav",   correct:"g_lin_neg_slow" },
+    { id:"V2P_exponential_fast",  src:"audio/V2P_exponential_fast.wav",  correct:"g_exp_up" },
+    { id:"PRAC_V2P_exponential_decay", src:"audio/PRAC_V2P_exponential_decay.wav", correct:"g_exp_decay" },
+    { id:"PRAC_V2P_linear_neg_very_steep", src:"audio/PRAC_V2P_linear_neg_very_steep.wav", accept:["g_lin_neg_fast"] },
 
-    // S2P (slope -> pitch)
-    // constant-tone: accept either linear (constant slope) or y=2
+    // --- S2P (slope -> pitch) ---
     { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", accept:["g_linear","g_const"] },
     { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad" },
-    // concave down visual mirrored to match a falling tone intuition
     { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt_mir" },
+    { id:"S2P_log_concave_down",      src:"audio/S2P_log_concave_down.wav",      correct:"g_log_mir" },
+    { id:"S2P_cubic_concave_up",      src:"audio/S2P_cubic_concave_up.wav",      correct:"g_cubic_pos" },
+    { id:"S2P_cubic_concave_down",    src:"audio/S2P_cubic_concave_down.wav",    correct:"g_cubic_neg" },
+    { id:"PRAC_S2P_logistic",         src:"audio/PRAC_S2P_logistic.wav",         correct:"g_logistic" },
   ];
 
+  // 15 figure options (A–O). Keep or tweak captions freely.
   const FIGURES = [
-    // V2P figures
-    { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x" },
-    { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x" },
-    { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2" },
+    // V2P-friendly visuals
+    { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x [V2P]" },
+    { id:"g_lin_pos_fast", fn:(x)=>1.20*x,  domain:[-5,5], caption:"y = 1.2x [V2P]" },
+    { id:"g_lin_neg_slow", fn:(x)=>-0.20*x, domain:[-5,5], caption:"y = -0.2x [V2P]" },
+    { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x [V2P]" },
+    { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2 [V2P]" },
+    { id:"g_exp_up",       fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5)" },
+    { id:"g_exp_decay",    fn:(x)=>Math.pow(2, -x/1.8),domain:[-4,4], caption:"y = 2^(-x/1.8)" },
 
-    // S2P figures
-    { id:"g_linear",   fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (Slope)" },
-    { id:"g_quad",     fn:(x)=>x*x,                           domain:[0,4],  caption:"quadratic (Slope)"  },
-    { id:"g_sqrt_mir", fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x (Slope)"                 },
+    // S2P-friendly visuals (rate-focused)
+    { id:"g_linear",    fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (slope constant) [S2P]" },
+    { id:"g_quad",      fn:(x)=>x*x,                           domain:[0,4],  caption:"y = x² on [0,4] [S2P]" },
+    { id:"g_sqrt_mir",  fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x [S2P]" },
+    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)),   domain:[0.1,4],caption:"y = -log x [S2P]" },
+    { id:"g_cubic_pos", fn:(x)=>x**3,                          domain:[0,2],  caption:"y = x³ on [0,2] [S2P]" },
+    { id:"g_cubic_neg", fn:(x)=>x**3,                          domain:[-2,0], caption:"y = x³ on [-2,0] [S2P]" },
+    { id:"g_logistic",  fn:(x)=>1/(1+Math.exp(-x)),            domain:[-4,4], caption:"logistic [S2P]" },
+    { id:"g_quad_shift",fn:(x)=>(x-1)**2,                      domain:[-1,3], caption:"y = (x-1)² [S2P]" },
   ];
 
-  const LETTERS = ['A','B','C','D','E','F']; // ABC / DEF grid order
+  // Letters auto-derive from figure count (A–O for 15)
+  const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
 
-  /* ======= Seeded RNG: use ?seed=... to lock orders ======= */
+  /* ======= Seeded RNG ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -190,11 +208,11 @@
     // 1) Shuffle audio order (seeded)
     shuffleInPlace(items, rngItems);
 
-    // 2) Shuffle figure assignment to fixed letters ABC/DEF (seeded)
+    // 2) Shuffle figure assignment to fixed letters (seeded)
     const figsShuffled = FIGURES.map(f=>({...f}));
     shuffleInPlace(figsShuffled, rngFigures);
 
-    // Map each fixed letter to a (shuffled) figure, and build reverse map figId -> letter
+    // Map each fixed letter to a (shuffled) figure, and reverse map figId -> letter
     const letterToFig = {};
     const letterByFigId = {};
     const captionByFigId = {};
@@ -213,10 +231,10 @@
       return [];
     }
     function mappingFromId(id){
-      return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
+      return id.startsWith("V2P") || id.startsWith("PRAC_V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
     }
 
-    // Layout containers
+    // Layout
     const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
     const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
 
@@ -238,7 +256,7 @@
       left.appendChild(card);
     });
 
-    // RIGHT: fixed ABC / DEF grid; graphs vary per seed
+    // RIGHT: fixed grid; graphs vary per seed
     LETTERS.forEach(L=>{
       const f = letterToFig[L];
       const box=document.createElement("div"); box.className="fig";
@@ -264,9 +282,9 @@
       let correct=0;
       const rows=[["pid","phase","audio_id","chosen_letter","accepted_letters","is_correct","timestamp_iso"]];
 
-      selects.forEach((s,i)=>{
+      selects.forEach((s)=>{
         const chosen = s.sel.value;
-        const spec = PROMPTS.find(p=>p.id===s.item.id);
+        const spec = items.find(p=>p.id===s.item.id);
         const acceptIds = getAcceptIds(spec);
         const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
         const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);

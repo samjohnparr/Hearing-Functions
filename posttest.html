@@ -6,10 +6,7 @@
   <title>Hearing Functions: Posttest (Part B)</title>
   <style>
     :root{ --w:160px; --h:120px }
-    body{
-      font-family:system-ui, Segoe UI, Helvetica, Arial, sans-serif;
-      max-width:1000px; margin:24px auto; padding:0 12px; line-height:1.4;
-    }
+    body{ font-family:system-ui, Segoe UI, Helvetica, Arial, sans-serif; max-width:1100px; margin:24px auto; padding:0 12px; line-height:1.4; }
     h1{ font-size:1.4rem; margin:.25rem 0 .6rem }
     .section{ border:1px solid #ddd; border-radius:12px; padding:12px; margin:14px 0; background:#fafafa }
     .grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
@@ -17,7 +14,7 @@
     .label{ font-weight:600 }
     .legend{ margin:-6px 0 10px; color:#444; font-size:.95rem }
     .maptag{ display:inline-block; margin:0 .35rem 0 .5rem; font-size:.78rem; border:1px solid #b9cdf9; background:#e8eefc; border-radius:8px; padding:2px 8px }
-    .figs{ display:grid; grid-template-columns:repeat(3, minmax(var(--w), 1fr)); gap:12px }
+    .figs{ display:grid; grid-template-columns:repeat(5, minmax(var(--w), 1fr)); gap:12px }
     .fig{ position:relative; border:1px solid #ddd; border-radius:10px; background:white; padding:8px }
     .badge{ position:absolute; left:8px; top:8px; background:#333; color:#fff; border-radius:8px; padding:2px 8px; font-size:.8rem }
     svg{ width:100%; height:auto; max-width:var(--w); max-height:var(--h); display:block; margin:0 auto }
@@ -44,12 +41,9 @@
     <span class="maptag" title="Value → Pitch">V2P</span> pitch tracks height.
     <span class="maptag" title="Slope → Pitch">S2P</span> pitch tracks slope (rate of change).
   </p>
-  <p class="muted">
-    Choose the letter of the figure (A–F) that matches each sound. All clips share the same timbre/range/tempo
-    (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).
-  </p>
+  <p class="muted">Choose the letter of the figure (A–O) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
 
-  <!-- Optional participant code to pair results (stored in localStorage only) -->
+  <!-- Optional participant code -->
   <div class="muted" style="margin:10px 0 14px">
     <label for="pid" style="font-weight:600">Participant code (optional):</label>
     <input id="pid" type="text" inputmode="text" pattern="[A-Za-z0-9_-]{1,24}"
@@ -60,33 +54,51 @@
   <div id="app"></div>
 
   <script>
-  /* ======= CONFIG: 6-item Posttest (Form B) ======= */
+  /* ======= CONFIG: 15-item Posttest (Form B) ======= */
   const PROMPTS = [
-    // V2P
-    { id:"V2P_linear_pos_fast",  src:"audio/V2P_linear_pos_fast.wav",  correct:"g_lin_pos_fast" },
-    { id:"V2P_linear_neg_slow",  src:"audio/V2P_linear_neg_slow.wav",  correct:"g_lin_neg_slow" },
-    { id:"V2P_exponential_fast", src:"audio/V2P_exponential_fast.wav", correct:"g_exp_fast" },
-    // S2P
-    { id:"S2P_log_concave_down",    src:"audio/S2P_log_concave_down.wav",    correct:"g_log_mir" },
-    { id:"S2P_cubic_concave_up",    src:"audio/S2P_cubic_concave_up.wav",    correct:"g_cubic_pos" },
-    { id:"S2P_cubic_concave_down",  src:"audio/S2P_cubic_concave_down.wav",  correct:"g_cubic_neg" },
+    // --- V2P ---
+    { id:"V2P_linear_pos_fast",   src:"audio/V2P_linear_pos_fast.wav",   correct:"g_lin_pos_fast" },
+    { id:"V2P_linear_neg_slow",   src:"audio/V2P_linear_neg_slow.wav",   correct:"g_lin_neg_slow" },
+    { id:"V2P_exponential_fast",  src:"audio/V2P_exponential_fast.wav",  correct:"g_exp_up" },
+    { id:"V2P_linear_pos_slow",   src:"audio/V2P_linear_pos_slow.wav",   correct:"g_lin_pos_slow" },
+    { id:"PRAC_V2P_linear_pos_very_gentle", src:"audio/PRAC_V2P_linear_pos_very_gentle.wav", accept:["g_lin_pos_slow"] },
+    { id:"PRAC_V2P_exponential_slow",       src:"audio/PRAC_V2P_exponential_slow.wav",       accept:["g_exp_up"] },
+    { id:"PRAC_V2P_exponential_decay",      src:"audio/PRAC_V2P_exponential_decay.wav",      correct:"g_exp_decay" },
+
+    // --- S2P ---
+    { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", accept:["g_linear","g_const"] },
+    { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad" },
+    { id:"PRAC_S2P_quadratic_shifted",src:"audio/PRAC_S2P_quadratic_shifted.wav",accept:["g_quad","g_quad_shift"] },
+    { id:"S2P_log_concave_down",      src:"audio/S2P_log_concave_down.wav",      correct:"g_log_mir" },
+    { id:"PRAC_S2P_log_wider",        src:"audio/PRAC_S2P_log_wider.wav",        accept:["g_log_mir"] },
+    { id:"S2P_cubic_concave_up",      src:"audio/S2P_cubic_concave_up.wav",      correct:"g_cubic_pos" },
+    { id:"S2P_cubic_concave_down",    src:"audio/S2P_cubic_concave_down.wav",    correct:"g_cubic_neg" },
+    { id:"PRAC_S2P_logistic",         src:"audio/PRAC_S2P_logistic.wav",         correct:"g_logistic" },
   ];
 
+  // Same 15-figure panel as Pretest (keeps the task isomorphic)
   const FIGURES = [
-    // V2P figures
-    { id:"g_lin_pos_fast", fn:(x)=>1.20*x,                 domain:[-5,5], caption:"y = 1.2x" },
-    { id:"g_lin_neg_slow", fn:(x)=>-0.20*x,                domain:[-5,5], caption:"y = -0.2x" },
-    { id:"g_exp_fast",     fn:(x)=>Math.pow(2, x/1.5),     domain:[-4,4], caption:"y = 2^(x/1.5)" },
+    { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x [V2P]" },
+    { id:"g_lin_pos_fast", fn:(x)=>1.20*x,  domain:[-5,5], caption:"y = 1.2x [V2P]" },
+    { id:"g_lin_neg_slow", fn:(x)=>-0.20*x, domain:[-5,5], caption:"y = -0.2x [V2P]" },
+    { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x [V2P]" },
+    { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2 [V2P]" },
+    { id:"g_exp_up",       fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5) [V2P]" },
+    { id:"g_exp_decay",    fn:(x)=>Math.pow(2, -x/1.8),domain:[-4,4], caption:"y = 2^(-x/1.8) [V2P]" },
 
-    // S2P figures
-    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)), domain:[0.1,4], caption:"y = -log(x) (Slope)" },
-    { id:"g_cubic_pos", fn:(x)=>x**3,                         domain:[0,2],   caption:"cubic on [0,2] (Slope)" },
-    { id:"g_cubic_neg", fn:(x)=>x**3,                         domain:[-2,0],  caption:"cubic on [-2,0] (Slope)" },
+    { id:"g_linear",    fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (slope constant) [S2P]" },
+    { id:"g_quad",      fn:(x)=>x*x,                           domain:[0,4],  caption:"y = x² on [0,4] [S2P]" },
+    { id:"g_sqrt_mir",  fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x [S2P]" },
+    { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)),   domain:[0.1,4],caption:"y = -log x [S2P]" },
+    { id:"g_cubic_pos", fn:(x)=>x**3,                          domain:[0,2],  caption:"y = x³ on [0,2] [S2P]" },
+    { id:"g_cubic_neg", fn:(x)=>x**3,                          domain:[-2,0], caption:"y = x³ on [-2,0] [S2P]" },
+    { id:"g_logistic",  fn:(x)=>1/(1+Math.exp(-x)),            domain:[-4,4], caption:"logistic [S2P]" },
+    { id:"g_quad_shift",fn:(x)=>(x-1)**2,                      domain:[-1,3], caption:"y = (x-1)² [S2P]" },
   ];
 
-  const LETTERS = ['A','B','C','D','E','F']; // fixed ABC / DEF grid
+  const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
 
-  /* ======= Seeded RNG: use ?seed=... to lock orders (not letters) ======= */
+  /* ======= Seeded RNG ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -202,11 +214,13 @@
     const items = PROMPTS.map(x=>({...x}));
     shuffleInPlace(items, rngItems);
 
-    // 2) Shuffle figure assignment to fixed letters ABC/DEF (seeded)
+    // 2) Shuffle figure assignment to fixed letters (seeded)
     const figsShuffled = FIGURES.map(f=>({...f}));
     shuffleInPlace(figsShuffled, rngFigures);
 
-    // Map each fixed letter to a (shuffled) figure, and build reverse map figId -> letter
+    const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
+
+    // Map letter <-> figure
     const letterToFig = {};
     const letterByFigId = {};
     const captionByFigId = {};
@@ -225,7 +239,7 @@
       return [];
     }
     function mappingFromId(id){
-      return id.startsWith("V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
+      return id.startsWith("V2P") || id.startsWith("PRAC_V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
     }
 
     // Layout containers
@@ -235,7 +249,7 @@
     const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
     const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
 
-    // LEFT: audio cards (order shuffled by seed)
+    // LEFT: audio cards
     const selects=[];
     items.forEach((it, idx)=>{
       const card=document.createElement("div"); card.className="item";
@@ -244,8 +258,7 @@
       title.innerHTML=`<span class="label">Sound ${idx+1}</span><span class="maptag" title="${map.long}">${map.short}</span>`;
       const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
       const sel=document.createElement("select");
-      const selId=`sel_${idx}`;
-      sel.id = selId;
+      const selId=`sel_${idx}`; sel.id = selId;
       sel.innerHTML=`<option value="">Choose figure…</option>` + LETTERS.map(L=>`<option value="${L}">${L}</option>`).join("");
       const lab=document.createElement("label"); lab.setAttribute("for", selId); lab.className="muted"; lab.style.display="inline-block"; lab.style.marginTop="6px"; lab.textContent="Choose figure…";
 
@@ -258,7 +271,7 @@
       left.appendChild(card);
     });
 
-    // RIGHT: fixed ABC / DEF grid; graphs vary per seed
+    // RIGHT: fixed A–O grid
     LETTERS.forEach(L=>{
       const f = letterToFig[L];
       const box=document.createElement("div"); box.className="fig";
@@ -316,8 +329,11 @@
       btnCSV.style.display="inline-block";
       btnCSV.onclick=()=>{
         const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
-        const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement("a");
-        a.href=URL.createObjectURL(blob); a.download=`results_${phase}_${Date.now()}.csv`; a.click();
+        const blob=new Blob([csv], {type: "text/csv"});
+        const a=document.createElement("a");
+        a.href=URL.createObjectURL(blob);
+        a.download=`results_${phase}_${Date.now()}.csv`;
+        a.click();
       };
       btnCheck.disabled=true;
     });
@@ -336,16 +352,13 @@
       out.textContent=""; btnCSV.style.display="none"; updateEnable();
     });
 
-    /* ======= EXIT SLIP (2–3 minutes) ======= */
+    /* ======= EXIT SLIP (kept) ======= */
     const exitSec = document.createElement("div");
     exitSec.className = "section";
     exitSec.innerHTML = `
-      <h2 style="margin:.2rem 0 .4rem">Exit Slip (2–3 minutes)</h2>
+      <h2 style="margin:.2rem 0 .4rem">Exit Slip</h2>
       <p class="muted" style="margin:.1rem 0 10px">
         Briefly answer the following:
-        <strong>What did you listen for in V2P?</strong> •
-        <strong>What did you listen for in S2P?</strong> •
-        <strong>What confused you?</strong>
       </p>
       <div class="item" style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px">
         <label for="es_v2p" class="label">What did you listen for in V2P?</label>
@@ -379,7 +392,7 @@
 
     // restore draft
     try {
-      const key = 'hf_exit_' + phase; // e.g., hf_exit_post
+      const key = 'hf_exit_post';
       const saved = JSON.parse(localStorage.getItem(key) || '{}');
       if (saved.v2p) es.v2p.value = saved.v2p;
       if (saved.s2p) es.s2p.value = saved.s2p;
@@ -388,7 +401,7 @@
 
     function saveDraft(){
       try {
-        const key = 'hf_exit_' + phase;
+        const key = 'hf_exit_post';
         localStorage.setItem(key, JSON.stringify({
           v2p: es.v2p.value, s2p: es.s2p.value, conf: es.conf.value
         }));
@@ -399,7 +412,7 @@
     [es.v2p, es.s2p, es.conf].forEach(t => t.addEventListener('input', saveDraft));
 
     es.btn.addEventListener('click', ()=>{
-      const pid = getPID() || getStoredPID(); // optional; blank if not set
+      const pid = getPID() || getStoredPID();
       const v2pAns = (es.v2p.value || '').trim();
       const s2pAns = (es.s2p.value || '').trim();
       const confAns = (es.conf.value || '').trim();
@@ -407,15 +420,13 @@
 
       const rows = [
         ["pid","phase","v2p_listen","s2p_listen","confusions","timestamp_iso"],
-        [pid, phase, v2pAns, s2pAns, confAns, timestamp]
+        [pid, "post", v2pAns, s2pAns, confAns, timestamp]
       ];
-      const csv = rows
-        .map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(","))
-        .join("\n");
+      const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
       const blob = new Blob([csv], {type: "text/csv"});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `exit_${phase}_${Date.now()}.csv`;
+      a.download = `exit_post_${Date.now()}.csv`;
       a.click();
     });
   })();
