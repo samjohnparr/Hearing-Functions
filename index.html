@@ -1,64 +1,74 @@
 <!doctype html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hearing Functions</title>
-<style>
-  :root { --w: 900px; }
-  body{
-    font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
-    max-width: var(--w);
-    margin: 2rem auto;
-    padding: 0 1rem;
-    line-height: 1.45;
-    text-align: center;
-  }
-  h1{ font-size:1.6rem; margin:0 0 .4rem; }
-  .author{ color:#444; font-size:.95rem; margin:.1rem 0 .6rem; }
-  .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
-  .author a:hover{ text-decoration:underline; }
-  .blurb{
-    color:#333; font-size:1rem; max-width:760px; margin:.5rem auto 1.2rem;
-  }
-  p.small{ color:#555; font-size:.95rem; margin:.2rem 0 1.2rem; }
-  .btns{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-  .btns.single{ margin-top:.5rem; }
-  .btn{
-    display:inline-block;
-    padding:.9rem 1.2rem;
-    border-radius:12px;
-    border:1px solid #bbb;
-    background:#f7f7f7;
-    text-decoration:none;
-    color:#111;
-    font-weight:600;
-    min-width:220px;
-  }
-  .btn:hover{ background:#efefef; }
-  .a{ background:#e9f5ff; border-color:#9fd0ff; }
-  .b{ background:#eafbea; border-color:#a9e3a9; }
-  .c{ background:#fff2e6; border-color:#ffcd99; }
-  .d{ background:#f0e9ff; border-color:#cabdff; } /* results button */
-  footer{ margin-top:1.2rem; color:#666; font-size:.9rem; }
-  footer a{ color:inherit; }
-</style>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hearing Functions</title>
+  <link rel="icon" href="favicon.png">
+  <style>
+    :root {
+      --w: 900px;
+      --brand-blue: #1e40af;     /* blue */
+      --brand-sky:  #0ea5e9;     /* sky blue */
+    }
+    body{
+      font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
+      max-width: var(--w);
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+    .logo{
+      width: 96px; height: 96px; display:block; margin:0 auto 10px; border-radius:20%;
+    }
+    h1{ font-size:1.6rem; margin:0 0 .4rem; }
+    .brand-blue{ color: var(--brand-blue); }
+    .brand-sky{  color: var(--brand-sky); }
+    .author{ color:#444; font-size:.95rem; margin:.1rem 0 .6rem; }
+    .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
+    .author a:hover{ text-decoration:underline; }
+    .blurb{ color:#333; font-size:1rem; max-width:760px; margin:.5rem auto 1.2rem; }
+    p.small{ color:#555; font-size:.95rem; margin:.2rem 0 1.2rem; }
+    .btns{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btns.single{ margin-top:.5rem; }
+    .btn{
+      display:inline-block; padding:.9rem 1.2rem; border-radius:12px;
+      border:1px solid #bbb; background:#f7f7f7; text-decoration:none; color:#111;
+      font-weight:600; min-width:220px;
+    }
+    .btn:hover{ background:#efefef; }
+    .a{ background:#e9f5ff; border-color:#9fd0ff; }
+    .b{ background:#eafbea; border-color:#a9e3a9; }
+    .c{ background:#fff2e6; border-color:#ffcd99; }
+    .d{ background:#f0e9ff; border-color:#cabdff; } /* results button */
+    footer{ margin-top:1.2rem; color:#666; font-size:.9rem; }
+    footer a{ color:inherit; }
+  </style>
+</head>
+<body>
 
-<h1>Hearing Functions</h1>
-<p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a> & Alleander Kate L. Gicale</p>
+  <img src="favicon.png" class="logo" alt="Hearing Functions logo" width="96" height="96" decoding="async" fetchpriority="high">
 
-<p class="blurb">
-  This project lets students <strong>hear</strong> what a graph is doing. Each short clip scans from left to right and turns the graph into notes. Two mappings are used: <strong>V2P (value-to-pitch)</strong>, in which pitch reflects height, and <strong>S2P (slope-to-pitch)</strong>, in which pitch reflects slope (rate of change). The goal is to support visual understanding through sound, help learners notice patterns such as increasing and decreasing behavior and concavity, and provide an accessible way to explore functions.
-</p>
+  <h1><span class="brand-blue">Hearing</span> <span class="brand-sky">Functions</span></h1>
 
-<p class="small">Choose what you need. Make sure your speakers are on.</p>
+  <p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a> & Alleander Kate L. Gicale</p>
 
-<!-- top row: three main buttons -->
-<div class="btns">
-  <a class="btn a" href="pretest.html">Start Pretest (Part A)</a>
-  <a class="btn c" href="instruction.html">Instructional Examples</a>
-  <a class="btn b" href="posttest.html">Start Posttest (Part B)</a>
-</div>
+  <p class="blurb">
+    This project lets students <strong>hear</strong> what a graph is doing. Each short clip scans from left to right and turns the graph into notes. Two mappings are used: <strong>V2P (value-to-pitch)</strong>, in which pitch reflects height, and <strong>S2P (slope-to-pitch)</strong>, in which pitch reflects slope (rate of change). The goal is to support visual understanding through sound, help learners notice patterns such as increasing and decreasing behavior and concavity, and provide an accessible way to explore functions.
+  </p>
 
-<!-- second row: action research results button -->
-<div class="btns single">
-  <a class="btn d" href="results.html">Action Research Results</a>
-</div>
+  <p class="small">Choose what you need. Make sure your speakers are on.</p>
+
+  <div class="btns">
+    <a class="btn a" href="pretest.html">Start Pretest (Part A)</a>
+    <a class="btn c" href="instruction.html">Instructional Examples</a>
+    <a class="btn b" href="posttest.html">Start Posttest (Part B)</a>
+  </div>
+
+  <div class="btns single">
+    <a class="btn d" href="results.html">Action Research Results</a>
+  </div>
+
+</body>
+</html>
