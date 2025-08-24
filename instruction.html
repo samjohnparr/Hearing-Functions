@@ -1,344 +1,379 @@
 <!doctype html>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hearing Functions: Instructional Examples</title>
-<style>
-  :root{
-    --page-w: 1000px;
-    --fig-w: 820;   /* logical SVG width (viewBox) */
-    --fig-h: 480;   /* logical SVG height (viewBox) */
-  }
-  body{
-    font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
-    max-width: var(--page-w);
-    margin: 24px auto;
-    padding: 0 16px;
-    line-height: 1.55;
-  }
-  h1{ font-size:1.8rem; margin:.2rem 0 .4rem }
-  h2{ font-size:1.25rem; margin:1.6rem 0 .6rem }
-  h3{ font-size:1.05rem; margin:1.0rem 0 .4rem }
-  .author{ margin:.1rem 0 1rem; color:#444; font-size:1rem; }
-  .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
-  .author a:hover{ text-decoration:underline; }
-  .note{ color:#333; font-size:1rem; margin-bottom:14px }
-  .stack{ display:block }
-  .card{
-    border:1px solid #ddd; border-radius:14px; background:#fafafa;
-    padding:14px; margin:14px 0;
-  }
-  .head{
-    display:flex; justify-content:space-between; align-items:center; gap:12px;
-    margin-bottom:8px; flex-wrap:wrap;
-  }
-  .tag{
-    font-size:.8rem; background:#e8eefc; border:1px solid #b9cdf9;
-    padding:2px 10px; border-radius:999px; white-space:nowrap;
-  }
-  .fig{
-    background:#fff; border:1px solid #ddd; border-radius:10px;
-    padding:8px; margin:8px 0 10px 0;
-  }
-  svg{ width:100%; height:auto; display:block; }
-  .caption{ color:#666; text-align:center; font-size:.95rem; margin-top:6px }
-  audio{ width:100%; margin:8px 0 }
-  .mini{ font-size:1rem; color:#333; margin:.35rem 0 }
-  .em{ font-weight:600 }
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hearing Functions: Instructional Examples</title>
+  <style>
+    :root{
+      --page-w: 1000px;
+      --fig-w: 820;   /* logical SVG width (viewBox) */
+      --fig-h: 480;   /* logical SVG height (viewBox) */
+    }
+    body{
+      font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
+      max-width: var(--page-w);
+      margin: 24px auto;
+      padding: 0 16px;
+      line-height: 1.55;
+    }
+    h1{ font-size:1.8rem; margin:.2rem 0 .4rem }
+    h2{ font-size:1.25rem; margin:1.6rem 0 .6rem }
+    h3{ font-size:1.05rem; margin:1.0rem 0 .4rem }
+    .author{ margin:.1rem 0 1rem; color:#444; font-size:1rem; }
+    .author a{ color:inherit; text-decoration:none; border-bottom:1px dashed #888; }
+    .author a:hover{ text-decoration:underline; }
+    .note{ color:#333; font-size:1rem; margin-bottom:14px }
+    .stack{ display:block }
+    .card{
+      border:1px solid #ddd; border-radius:14px; background:#fafafa;
+      padding:14px; margin:14px 0;
+    }
+    .head{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      margin-bottom:8px; flex-wrap:wrap;
+    }
+    .tag{
+      font-size:.8rem; background:#e8eefc; border:1px solid #b9cdf9;
+      padding:2px 10px; border-radius:999px; white-space:nowrap;
+    }
+    .fig{
+      background:#fff; border:1px solid #ddd; border-radius:10px;
+      padding:8px; margin:8px 0 10px 0;
+    }
+    svg{ width:100%; height:auto; display:block; }
+    .caption{ color:#666; text-align:center; font-size:.95rem; margin-top:6px }
+    audio{ width:100%; margin:8px 0 }
+    .mini{ font-size:1rem; color:#333; margin:.35rem 0 }
+    .em{ font-weight:600 }
 
-  /* Teacher notes toggle */
-  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
-  .btn{
-    padding:.45rem .8rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;cursor:pointer;
-  }
-  .btn:hover{background:#eee}
-  .tnote{display:none;border-left:4px solid #6aa3ff;background:#f1f6ff;padding:.6rem .7rem;margin:.6rem 0;border-radius:8px}
-  body.show-notes .tnote{display:block}
-  .tnote .codes{margin:.4rem 0 0}
+    /* Teacher notes toggle */
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+    .btn{
+      padding:.45rem .8rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;cursor:pointer;
+    }
+    .btn:hover{background:#eee}
+    .tnote{display:none;border-left:4px solid #6aa3ff;background:#f1f6ff;padding:.6rem .7rem;margin:.6rem 0;border-radius:8px}
+    body.show-notes .tnote{display:block}
+    .tnote .codes{margin:.4rem 0 0}
 
-  /* Home button */
-  .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
-  .homebtn{
-    display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
-    background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
-  }
-  .homebtn:hover{background:#eee;}
+    /* Home button */
+    .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
+    .homebtn{
+      display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
+      background:#f5f5f5;text-decoration:none;color:#111;font-weight:600;
+    }
+    .homebtn:hover{background:#eee;}
 
-  /* Lists inside notes */
-  .tnote ul{margin:.4rem 0 .2rem 1.2rem}
-  .tnote li{margin:.18rem 0}
-  .badge{display:inline-block;padding:.12rem .45rem;border:1px solid #bbb;border-radius:8px;background:#fafafa;margin-left:.4rem;font-size:.8rem}
-</style>
-
-<div class="homebar">
-  <a class="homebtn" href="index.html">🏠 Home</a>
-</div>
-
-<h1>Hearing Functions: Instructional Examples</h1>
-<p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a> & Alleander Kate L. Gicale</p>
-
-<div class="toolbar">
-  <button id="toggleNotes" class="btn">👁️ Show/Hide Teacher Notes</button>
-  <a class="btn" href="pretest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Pretest</a>
-  <a class="btn" href="posttest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Posttest</a>
-</div>
-
-<p class="note">
-  We’re turning graphs into sound. Each short “beep” walks from the <em>left</em> of the graph to the <em>right</em>.
-  <br><br>
-  Two ways we make sound:
-  <br>• <span class="em">Value → Pitch (V2P)</span>: Higher graph = higher note. Lower graph = lower note.
-  <br>• <span class="em">Slope → Pitch (S2P)</span>: Steeper = higher note. Flatter = lower note. (You’re “hearing” how fast the graph is changing.)
-  <br><br>
-  All clips use the same instrument, speed, and pitch range.
-</p>
-
-<div class="tnote">
-  <h3 style="margin-top:.2rem">Lesson Objectives</h3>
-  By the end of the class, students will be able to:
-  <ul>
-    <li>Explain how graph <em>height</em> maps to pitch in V2P.</li>
-    <li>Explain how graph <em>rate of change</em> (slope) maps to pitch in S2P.</li>
-    <li>Match sounds to graphs (and vice versa) for linear, exponential/log, quadratic, and logistic examples.</li>
-  </ul>
-
-  <h3>Aligned competencies 
-  <div class="codes">
-    <span class="badge">M11GM-Ia-1</span>
-    <span class="badge">M11GM-Ia-4</span>
-    <span class="badge">M11GM-Ie-3</span>
-    <span class="badge">M11GM-If-2</span>
-    <span class="badge">M11GM-Ig-1</span>
-    <span class="badge">M11GM-Ih-1</span>
-    <span class="badge">M11GM-Ij-1</span>
+    /* Lists inside notes */
+    .tnote ul{margin:.4rem 0 .2rem 1.2rem}
+    .tnote li{margin:.18rem 0}
+    .badge{display:inline-block;padding:.12rem .45rem;border:1px solid #bbb;border-radius:8px;background:#fafafa;margin-left:.4rem;font-size:.8rem}
+  </style>
+</head>
+<body>
+  <div class="homebar">
+    <a class="homebtn" href="index.html">🏠 Home</a>
   </div>
 
-  <h3>Before Class (5–10 min)</h3>
-  <ul>
-    <li>Check speakers or student headphones; set volume to a safe level.</li>
-    <li>Open this page and the <strong>Pretest</strong> in separate tabs. If you want fixed randomization, append <code>?seed=classA</code> (any string works).</li>
-    <li>Optional: pair students for Think-Pair-Share moments.</li>
-  </ul>
+  <h1>Hearing Functions: Instructional Examples</h1>
+  <p class="author">by <a href="https://samjohnparr.github.io/" target="_blank" rel="noopener">Samuel John E. Parreño</a> & Alleander Kate L. Gicale</p>
 
-  <h3>Class Flow (45–60 min)</h3>
-  <ol>
-    <li><strong>Pretest (8–10 min)</strong> — Students answer the <em>pretest</em> individually. No hints, no labels.</li>
-    <li><strong>Concept Launch (3–5 min)</strong> — Explain V2P vs S2P with the short paragraph above.</li>
-    <li><strong>Guided Listening: V2P (8–10 min)</strong> — Play each V2P card: ask “What do you predict?” then reveal and discuss.</li>
-    <li><strong>Quick Check (2–3 min)</strong> — Ask a cold-call or hands-up question: “If the line is twice as steep, what happens to the pitch span?”</li>
-    <li><strong>Guided Listening: S2P (10–12 min)</strong> — Emphasize <em>rate of change</em>. For each, ask: “Where is it changing fastest?”</li>
-    <li><strong>Pair Practice (5–8 min)</strong> — Students choose one V2P and one S2P clip to explain to a partner (why it sounds that way).</li>
-    <li><strong>Posttest (8–10 min)</strong> — Students answer the <em>posttest</em> individually.</li>
-    <li><strong>Reflect (2–3 min)</strong> — Quick debrief: “What clue helped you the most?”</li>
-  </ol>
+  <div class="toolbar">
+    <button id="toggleNotes" class="btn">👁️ Show/Hide Teacher Notes</button>
+    <a class="btn" href="pretest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Pretest</a>
+    <a class="btn" href="posttest.html?seed=classA" target="_blank" rel="noopener">▶️ Open Posttest</a>
+  </div>
 
-  <h3>Formative Prompts You Can Use Anytime</h3>
-  <ul>
-    <li>“Point to the part of the graph that matches the highest note.”</li>
-    <li>“Where does the note change most quickly? What does that tell us about the slope there?”</li>
-    <li>“If we mirrored this graph vertically, how would the sound change?”</li>
-  </ul>
+  <p class="note">
+    We’re turning graphs into sound. Each short “beep” walks from the <em>left</em> of the graph to the <em>right</em>.
+    <br><br>
+    Two ways we make sound:
+    <br>• <span class="em">Value → Pitch (V2P)</span>: Higher graph = higher note. Lower graph = lower note.
+    <br>• <span class="em">Slope → Pitch (S2P)</span>: Steeper = higher note. Flatter = lower note. (You’re “hearing” how fast the graph is changing.)
+    <br><br>
+    All clips use the same instrument, speed, and pitch range.
+  </p>
 
-  <h3>Common Misconceptions to Address</h3>
-  <ul>
-    <li><em>S2P ≠ height.</em> In S2P, a high note means “changing fast,” not “high y-value.”</li>
-    <li><em>Direction is left → right.</em> The first tone is the left end of the domain.</li>
-    <li>Exponential/logistic <em>values</em> can rise while the S2P <em>pitch</em> falls at the end (because slope shrinks toward 0).</li>
-  </ul>
-</div>
+  <div class="tnote">
+    <h3 style="margin-top:.2rem">Lesson Objectives</h3>
+    By the end of the class, students will be able to:
+    <ul>
+      <li>Explain how graph <em>height</em> maps to pitch in V2P.</li>
+      <li>Explain how graph <em>rate of change</em> (slope) maps to pitch in S2P.</li>
+      <li>Match sounds to graphs (and vice versa) for linear, exponential/log, quadratic, and logistic examples.</li>
+    </ul>
 
-<h2>Value → Pitch (V2P): Hear the height of the graph</h2>
-<div id="v2p" class="stack"></div>
+    <h3>Aligned competencies</h3>
+    <div class="codes">
+      <span class="badge">M11GM-Ia-1</span>
+      <span class="badge">M11GM-Ia-4</span>
+      <span class="badge">M11GM-Ie-3</span>
+      <span class="badge">M11GM-If-2</span>
+      <span class="badge">M11GM-Ig-1</span>
+      <span class="badge">M11GM-Ih-1</span>
+      <span class="badge">M11GM-Ij-1</span>
+    </div>
 
-<h2>Slope → Pitch (S2P): Hear how fast the graph is changing</h2>
-<div id="s2p" class="stack"></div>
+    <h3>Before Class (5–10 min)</h3>
+    <ul>
+      <li>Check speakers or student headphones; set volume to a safe level.</li>
+      <li>Open this page and the <strong>Pretest</strong> in separate tabs. If you want fixed randomization, append <code>?seed=classA</code> (any string works).</li>
+      <li>Pair students for Think-Pair-Share moments.</li>
+    </ul>
 
-<div class="tnote">
-  <h3>Closure & Next Steps</h3>
-  <ul>
-    <li>Invite 2–3 students to summarize the difference between V2P and S2P in one sentence each.</li>
-    <li>Extension idea: Have students draw a mini-graph and predict the sound (class votes), then play the actual clip.</li>
-    <li>Homework option: Write a 4–5 sentence explanation of a new function (student’s choice) in both V2P and S2P terms.</li>
-  </ul>
-</div>
+    <h3>Class Flow (45–60 min)</h3>
+    <ol>
+      <li><strong>Pretest (8–10 min)</strong> — Students answer the <em>pretest</em> individually. No hints, no labels.</li>
+      <li><strong>Concept Launch (3–5 min)</strong> — Explain V2P vs S2P with the short paragraph above.</li>
+      <li><strong>Guided Listening: V2P (8–10 min)</strong> — Play each V2P card: ask “What do you predict?” then reveal and discuss.</li>
+      <li><strong>Quick Check (2–3 min)</strong> — Ask a cold-call or hands-up question: “If the line is twice as steep, what happens to the pitch span?”</li>
+      <li><strong>Guided Listening: S2P (10–12 min)</strong> — Emphasize <em>rate of change</em>. For each, ask: “Where is it changing fastest?”</li>
+      <li><strong>Pair Practice (5–8 min)</strong> — Students choose one V2P and one S2P clip to explain to a partner (why it sounds that way).</li>
+      <li><strong>Posttest (8–10 min)</strong> — Students answer the <em>posttest</em> individually.</li>
+      <li><strong>Reflect (2–3 min)</strong> — Quick debrief: “What clue helped you the most?”</li>
+    </ol>
 
-<script>
-/* ---------- Teacher-notes toggle ---------- */
-(function(){
-  const key = "hf_show_notes";
-  const body = document.body;
-  if(localStorage.getItem(key)==="1"){ body.classList.add("show-notes"); }
-  document.getElementById("toggleNotes").addEventListener("click", ()=>{
-    body.classList.toggle("show-notes");
-    localStorage.setItem(key, body.classList.contains("show-notes") ? "1" : "0");
-  });
-})();
+    <h3>Formative Prompts You Can Use Anytime</h3>
+    <ul>
+      <li>“Point to the part of the graph that matches the highest note.”</li>
+      <li>“Where does the note change most quickly? What does that tell us about the slope there?”</li>
+      <li>“If we mirrored this graph vertically, how would the sound change?”</li>
+    </ul>
 
-/* ---------- plotting helpers ---------- */
-function sampleY(fn, domain, N=400){
-  const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
-  const ys=xs.map(fn);
-  let ymin=Math.min(...ys), ymax=Math.max(...ys);
-  if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
-  if(ymax-ymin<1e-6){ymax=ymin+1;}
-  const pad=0.12*(ymax-ymin);
-  return {xs, ys, ymin:ymin-pad, ymax:ymax+pad, x0, x1};
-}
-const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
-const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
+    <h3>Common Misconceptions to Address</h3>
+    <ul>
+      <li><em>S2P ≠ height.</em> In S2P, a high note means “changing fast,” not “high y-value.”</li>
+      <li><em>Direction is left → right.</em> The first tone is the left end of the domain.</li>
+      <li>Exponential/logistic <em>values</em> can rise while the S2P <em>pitch</em> falls at the end (because slope shrinks toward 0).</li>
+    </ul>
+  </div>
 
-function drawGraph(container, fn, domain, caption){
-  const NS="http://www.w3.org/2000/svg";
-  const W=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fig-w'))||820;
-  const H=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fig-h'))||480;
+  <h2>Value → Pitch (V2P): Hear the height of the graph</h2>
+  <div id="v2p" class="stack"></div>
 
-  const svg=document.createElementNS(NS,"svg");
-  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  <h2>Slope → Pitch (S2P): Hear how fast the graph is changing</h2>
+  <div id="s2p" class="stack"></div>
 
-  const {xs,ys,ymin,ymax,x0,x1}=sampleY(fn, domain, 400);
+  <div class="tnote">
+    <h3>Closure & Next Steps</h3>
+    <ul>
+      <li>Invite 2–3 students to summarize the difference between V2P and S2P in one sentence each.</li>
+      <li>Extension idea: Have students draw a mini-graph and predict the sound (class votes).</li>
+      <li>Homework option: Write a 4–5 sentence explanation of a new function (student’s choice) in both V2P and S2P terms.</li>
+    </ul>
+  </div>
 
-  if(x0<=0 && x1>=0){
-    const xz=mapX(0,x0,x1,W);
-    const v=document.createElementNS(NS,"line");
-    v.setAttribute("x1",xz); v.setAttribute("x2",xz); v.setAttribute("y1",0); v.setAttribute("y2",H);
-    v.setAttribute("stroke","#bbb"); v.setAttribute("stroke-width","1.2"); svg.appendChild(v);
+  <script>
+  /* ---------- Teacher-notes toggle ---------- */
+  (function(){
+    const key = "hf_show_notes";
+    const body = document.body;
+    if(localStorage.getItem(key)==="1"){ body.classList.add("show-notes"); }
+    document.getElementById("toggleNotes").addEventListener("click", ()=>{
+      body.classList.toggle("show-notes");
+      localStorage.setItem(key, body.classList.contains("show-notes") ? "1" : "0");
+    });
+  })();
+
+  /* ---------- plotting helpers ---------- */
+  function sampleY(fn, domain, N=400){
+    const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
+    const ys=xs.map(fn);
+    let ymin=Math.min(...ys), ymax=Math.max(...ys);
+    if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
+    if(ymax-ymin<1e-6){ymax=ymin+1;}
+    const pad=0.12*(ymax-ymin);
+    return {xs, ys, ymin:ymin-pad, ymax:ymax+pad, x0, x1};
   }
-  if(ymin<=0 && ymax>=0){
-    const yz=mapY(0,ymin,ymax,H);
-    const h=document.createElementNS(NS,"line");
-    h.setAttribute("x1",0); h.setAttribute("x2",W); h.setAttribute("y1",yz); h.setAttribute("y2",yz);
-    h.setAttribute("stroke","#bbb"); h.setAttribute("stroke-width","1.2"); svg.appendChild(h);
+  const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
+  const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
+
+  function drawGraph(container, fn, domain, caption){
+    const NS="http://www.w3.org/2000/svg";
+    const W=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fig-w'))||820;
+    const H=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--fig-h'))||480;
+
+    const svg=document.createElementNS(NS,"svg");
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+
+    const {xs,ys,ymin,ymax,x0,x1}=sampleY(fn, domain, 400);
+
+    if(x0<=0 && x1>=0){
+      const xz=mapX(0,x0,x1,W);
+      const v=document.createElementNS(NS,"line");
+      v.setAttribute("x1",xz); v.setAttribute("x2",xz); v.setAttribute("y1",0); v.setAttribute("y2",H);
+      v.setAttribute("stroke","#bbb"); v.setAttribute("stroke-width","1.2"); svg.appendChild(v);
+    }
+    if(ymin<=0 && ymax>=0){
+      const yz=mapY(0,ymin,ymax,H);
+      const h=document.createElementNS(NS,"line");
+      h.setAttribute("x1",0); h.setAttribute("x2",W); h.setAttribute("y1",yz); h.setAttribute("y2",yz);
+      h.setAttribute("stroke","#bbb"); h.setAttribute("stroke-width","1.2"); svg.appendChild(h);
+    }
+
+    let d=""; for(let i=0;i<xs.length;i++){
+      const X=mapX(xs[i],x0,x1,W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);
+    }
+    const path=document.createElementNS(NS,"path");
+    path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2.5");
+    svg.appendChild(path);
+
+    const wrap=document.createElement("div"); wrap.className="fig";
+    const cap=document.createElement("div"); cap.className="caption"; cap.textContent=caption||"";
+    wrap.appendChild(svg); wrap.appendChild(cap);
+    container.appendChild(wrap);
   }
 
-  let d=""; for(let i=0;i<xs.length;i++){
-    const X=mapX(xs[i],x0,x1,W), Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);
+  /* ---------- examples (match your PRAC_*.wav filenames) ---------- */
+  const V2P = [
+    {
+      id:"PRAC_V2P_linear_pos_very_gentle", label:"Line going up (gentle)",
+      fn:(x)=>0.10*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_pos_very_gentle.wav",
+      listen:"The note slowly goes up.",
+      discuss:"The graph climbs a little each step, so the pitch also climbs a little each step.",
+      ask:[
+        "If the line were twice as steep, how would the sound change?",
+        "Where is the lowest note? Where is the highest?"
+      ],
+      contexts:[
+        "Growth: a water tank filling at a steady trickle—level rises evenly.",
+        "Finance: saving the same amount weekly—balance increases linearly."
+      ],
+      codes:["M11GM-Ia-1","M11GM-Ia-4"]
+    },
+    {
+      id:"PRAC_V2P_linear_neg_very_steep", label:"Line going down (very steep)",
+      fn:(x)=>-1.30*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_neg_very_steep.wav",
+      listen:"The note drops fast and by a lot.",
+      discuss:"The graph falls quickly, so the sound falls quickly too.",
+      ask:[
+        "How does this compare to the gentle line?",
+        "What part of the clip changes the most in pitch?"
+      ],
+      contexts:[
+        "Braking: speedometer reading plunges when braking hard.",
+        "Battery: phone battery draining quickly under heavy use."
+      ],
+      codes:["M11GM-Ia-1","M11GM-Ia-4"]
+    },
+    {
+      id:"PRAC_V2P_exponential_slow", label:"Exponential up (starts slow, then faster)",
+      fn:(x)=>Math.pow(2, x/3.0), domain:[-4,4], src:"audio/PRAC_V2P_exponential_slow.wav",
+      listen:"Starts rising slowly, then rises faster near the end.",
+      discuss:"The graph starts low and speeds up as it goes right, so the pitch does the same.",
+      ask:[
+        "Where does the biggest jump in pitch happen?",
+        "What would a ‘reverse’ of this sound like?"
+      ],
+      contexts:[
+        "Growth: compound interest—balance grows faster over time.",
+        "Spread: shares/views of a viral post accelerating."
+      ],
+      codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
+    },
+    {
+      id:"PRAC_V2P_exponential_decay", label:"Exponential down (fast drop, then levels)",
+      fn:(x)=>Math.pow(2, -x/1.8), domain:[-4,4], src:"audio/PRAC_V2P_exponential_decay.wav",
+      listen:"Drops quickly at first, then levels off.",
+      discuss:"The graph falls a lot at the start and then flattens, so the pitch falls then steadies.",
+      ask:[
+        "Why does the pitch change less near the end?",
+        "Where would the middle note be compared to start/end?"
+      ],
+      contexts:[
+        "Cooling: hot drink cools quickly at first, then slowly approaches room temperature.",
+        "Decay: medicine concentration wearing off over time."
+      ],
+      codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
+    },
+  ];
+
+  const S2P = [
+    {
+      id:"PRAC_S2P_quadratic_shifted", label:"Parabola with lowest point at x=1",
+      fn:(x)=>(x-1)**2, domain:[-1,3], src:"audio/PRAC_S2P_quadratic_shifted.wav",
+      listen:"The note keeps going up from start to finish.",
+      discuss:"We’re listening to how fast the graph changes. On the left it’s changing downward, then it changes more and more upward, so the pitch rises across the clip.",
+      ask:[
+        "At x=1 the slope is 0. What part of the sound does that feel like?",
+        "How would this differ if we used V2P instead?"
+      ],
+      contexts:[
+        "Turnaround: a ball thrown upward slows, stops momentarily (slope≈0), then speeds up downward.",
+        "Driving: easing off the brake and pressing the gas—rate of change increases through zero."
+      ],
+      codes:["M11GM-Ia-1","M11GM-Ia-4"]
+    },
+    {
+      id:"PRAC_S2P_log_wider", label:"Log shape going down",
+      fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
+      listen:"The note slowly goes down over time.",
+      discuss:"At the start the graph changes more; later it changes less. Less change = lower pitch, so the sound gently falls.",
+      ask:[
+        "Where is the change fastest? How do you know from the sound?",
+        "What happens to pitch if we shift the domain to larger x-values?"
+      ],
+      contexts:[
+        "Braking: deceleration strongest at first, then tapers off.",
+        "Learning curve: big gains early, smaller gains later (diminishing returns)."
+      ],
+      codes:["M11GM-Ih-1","M11GM-Ij-1","M11GM-Ia-4"]
+    },
+    {
+      id:"PRAC_S2P_logistic", label:"Logistic (fastest in the middle)",
+      fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
+      listen:"Low → high → low (highest in the middle).",
+      discuss:"This graph changes slow → fast → slow. Fast change = higher pitch, so you hear the peak in the middle.",
+      ask:[
+        "How can the function keep rising while the pitch falls at the end?",
+        "Where would you place the inflection point from the sound alone?"
+      ],
+      contexts:[
+        "Saturation: app adoption is slow at first, fastest mid-period, then slows as it nears 100%.",
+        "Population: growth approaches a carrying capacity—rate peaks in the middle."
+      ],
+      codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1","M11GM-Ia-4"]
+    },
+  ];
+
+  /* ---------- render ---------- */
+  function makeCard(entry, mapping, mount){
+    const card=document.createElement("div"); card.className="card";
+    const head=document.createElement("div"); head.className="head";
+    head.innerHTML = `<div><strong>${entry.label}</strong></div><div class="tag">${mapping}</div>`;
+    const fig=document.createElement("div");
+    drawGraph(fig, entry.fn, entry.domain, `y = f(x) on [${entry.domain[0]}, ${entry.domain[1]}]`);
+    const player=document.createElement("audio"); player.controls=true; player.src=entry.src;
+    const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What you'll hear:</span> ${entry.listen}`;
+    const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Why it sounds like that:</span> ${entry.discuss}`;
+
+    // Teacher prompts + competency codes + context frames (hidden unless notes are shown)
+    const tbox=document.createElement("div"); tbox.className="tnote";
+    const hints = (entry.ask||[]).map(q=>`<li>${q}</li>`).join("");
+    const ctxs  = (entry.contexts||[]).map(c=>`<li>${c}</li>`).join("");
+    const codeBadges = (entry.codes||[]).map(c=>`<span class="badge">${c}</span>`).join(" ");
+    tbox.innerHTML = `
+      <div><strong>Teacher prompts</strong> <span class="badge">Think–Pair–Share ready</span></div>
+      <ul>${hints || "<li>Ask students to predict before playing, then justify after.</li>"}</ul>
+      ${ctxs ? `<div style="margin-top:.4rem"><strong>Real-world context frames</strong></div><ul>${ctxs}</ul>` : ""}
+      <div style="margin-top:.4rem"><em>Tip:</em> Play twice — once blind (predict), once with the graph in view.</div>
+      ${codeBadges ? `<div style="margin-top:.5rem"><strong>Competency codes:</strong> ${codeBadges}</div>` : ""}
+    `;
+
+    card.appendChild(head);
+    card.appendChild(fig);
+    card.appendChild(player);
+    card.appendChild(listen);
+    card.appendChild(discuss);
+    card.appendChild(tbox);
+    mount.appendChild(card);
   }
-  const path=document.createElementNS(NS,"path");
-  path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2.5");
-  svg.appendChild(path);
 
-  const wrap=document.createElement("div"); wrap.className="fig";
-  const cap=document.createElement("div"); cap.className="caption"; cap.textContent=caption||"";
-  wrap.appendChild(svg); wrap.appendChild(cap);
-  container.appendChild(wrap);
-}
-
-/* ---------- examples (match your PRAC_*.wav filenames) ---------- */
-const V2P = [
-  {
-    id:"PRAC_V2P_linear_pos_very_gentle", label:"Line going up (gentle)",
-    fn:(x)=>0.10*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_pos_very_gentle.wav",
-    listen:"The note slowly goes up.",
-    discuss:"The graph climbs a little each step, so the pitch also climbs a little each step.",
-    ask:[
-      "If the line were twice as steep, how would the sound change?",
-      "Where is the lowest note? Where is the highest?"
-    ],
-    codes:["M11GM-Ia-1","M11GM-Ia-4"]
-  },
-  {
-    id:"PRAC_V2P_linear_neg_very_steep", label:"Line going down (very steep)",
-    fn:(x)=>-1.30*x, domain:[-5,5], src:"audio/PRAC_V2P_linear_neg_very_steep.wav",
-    listen:"The note drops fast and by a lot.",
-    discuss:"The graph falls quickly, so the sound falls quickly too.",
-    ask:[
-      "How does this compare to the gentle line?",
-      "What part of the clip changes the most in pitch?"
-    ],
-    codes:["M11GM-Ia-1","M11GM-Ia-4"]
-  },
-  {
-    id:"PRAC_V2P_exponential_slow", label:"Exponential up (starts slow, then faster)",
-    fn:(x)=>Math.pow(2, x/3.0), domain:[-4,4], src:"audio/PRAC_V2P_exponential_slow.wav",
-    listen:"Starts rising slowly, then rises faster near the end.",
-    discuss:"The graph starts low and speeds up as it goes right, so the pitch does the same.",
-    ask:[
-      "Where does the biggest jump in pitch happen?",
-      "What would a ‘reverse’ of this sound like?"
-    ],
-    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
-  },
-  {
-    id:"PRAC_V2P_exponential_decay", label:"Exponential down (fast drop, then levels)",
-    fn:(x)=>Math.pow(2, -x/1.8), domain:[-4,4], src:"audio/PRAC_V2P_exponential_decay.wav",
-    listen:"Drops quickly at first, then levels off.",
-    discuss:"The graph falls a lot at the start and then flattens, so the pitch falls then steadies.",
-    ask:[
-      "Why does the pitch change less near the end?",
-      "Where would the middle note be compared to start/end?"
-    ],
-    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1"]
-  },
-];
-
-const S2P = [
-  {
-    id:"PRAC_S2P_quadratic_shifted", label:"Parabola with lowest point at x=1",
-    fn:(x)=>(x-1)**2, domain:[-1,3], src:"audio/PRAC_S2P_quadratic_shifted.wav",
-    listen:"The note keeps going up from start to finish.",
-    discuss:"We’re listening to how fast the graph changes. On the left it’s changing downward, then it changes more and more upward, so the pitch rises across the clip.",
-    ask:[
-      "At x=1 the slope is 0. What part of the sound does that feel like?",
-      "How would this differ if we used V2P instead?"
-    ],
-    codes:["M11GM-Ia-1","M11GM-Ia-4"]
-  },
-  {
-    id:"PRAC_S2P_log_wider", label:"Log shape going down",
-    fn:(x)=>Math.log(Math.max(1e-6,x)), domain:[0.5,5], src:"audio/PRAC_S2P_log_wider.wav",
-    listen:"The note slowly goes down over time.",
-    discuss:"At the start the graph changes more; later it changes less. Less change = lower pitch, so the sound gently falls.",
-    ask:[
-      "Where is the change fastest? How do you know from the sound?",
-      "What happens to pitch if we shift the domain to larger x-values?"
-    ],
-    codes:["M11GM-Ih-1","M11GM-Ij-1","M11GM-Ia-4"]
-  },
-  {
-    id:"PRAC_S2P_logistic", label:"Logistic (fastest in the middle)",
-    fn:(x)=>1/(1+Math.exp(-x)), domain:[-4,4], src:"audio/PRAC_S2P_logistic.wav",
-    listen:"Low → high → low (highest in the middle).",
-    discuss:"This graph changes slow → fast → slow. Fast change = higher pitch, so you hear the peak in the middle.",
-    ask:[
-      "How can the function keep rising while the pitch falls at the end?",
-      "Where would you place the inflection point from the sound alone?"
-    ],
-    codes:["M11GM-Ie-3","M11GM-If-2","M11GM-Ig-1","M11GM-Ia-4"]
-  },
-];
-
-/* ---------- render ---------- */
-function makeCard(entry, mapping, mount){
-  const card=document.createElement("div"); card.className="card";
-  const head=document.createElement("div"); head.className="head";
-  head.innerHTML = `<div><strong>${entry.label}</strong></div><div class="tag">${mapping}</div>`;
-  const fig=document.createElement("div");
-  drawGraph(fig, entry.fn, entry.domain, `y = f(x) on [${entry.domain[0]}, ${entry.domain[1]}]`);
-  const player=document.createElement("audio"); player.controls=true; player.src=entry.src;
-  const listen=document.createElement("div"); listen.className="mini"; listen.innerHTML = `<span class="em">What you'll hear:</span> ${entry.listen}`;
-  const discuss=document.createElement("div"); discuss.className="mini"; discuss.innerHTML = `<span class="em">Why it sounds like that:</span> ${entry.discuss}`;
-
-  // Teacher prompts + competency codes (hidden unless notes are shown)
-  const tbox=document.createElement("div"); tbox.className="tnote";
-  const hints = (entry.ask||[]).map(q=>`<li>${q}</li>`).join("");
-  const codeBadges = (entry.codes||[]).map(c=>`<span class="badge">${c}</span>`).join(" ");
-  tbox.innerHTML = `
-    <div><strong>Teacher prompts</strong> <span class="badge">Think–Pair–Share ready</span></div>
-    <ul>${hints || "<li>Ask students to predict before playing, then justify after.</li>"}</ul>
-    <div style="margin-top:.4rem"><em>Tip:</em> Play twice — once blind (predict), once with the graph in view.</div>
-    ${codeBadges ? `<div style="margin-top:.5rem"><strong>Competency codes:</strong> ${codeBadges}</div>` : ""}
-  `;
-
-  card.appendChild(head);
-  card.appendChild(fig);
-  card.appendChild(player);
-  card.appendChild(listen);
-  card.appendChild(discuss);
-  card.appendChild(tbox);
-  mount.appendChild(card);
-}
-
-const v2p = document.getElementById("v2p");
-const s2p = document.getElementById("s2p");
-V2P.forEach(e=>makeCard(e,"V2P (value → pitch)", v2p));
-S2P.forEach(e=>makeCard(e,"S2P (slope → pitch)", s2p));
-</script>
+  const v2p = document.getElementById("v2p");
+  const s2p = document.getElementById("s2p");
+  V2P.forEach(e=>makeCard(e,"V2P (value → pitch)", v2p));
+  S2P.forEach(e=>makeCard(e,"S2P (slope → pitch)", s2p));
+  </script>
+</body>
+</html>
