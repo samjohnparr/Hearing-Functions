@@ -1,7 +1,7 @@
 [
   {
-    "name": "POST_V2P_lin_inc_gentle",
-    "file": "POST_V2P_lin_inc_gentle.wav",
+    "name": "V2P_linear_pos_slow",
+    "file": "V2P_linear_pos_slow.wav",
     "mode": "V2P",
     "domain": [
       -5,
@@ -9,8 +9,8 @@
     ]
   },
   {
-    "name": "POST_V2P_lin_dec_gentle",
-    "file": "POST_V2P_lin_dec_gentle.wav",
+    "name": "V2P_linear_neg_fast",
+    "file": "V2P_linear_neg_fast.wav",
     "mode": "V2P",
     "domain": [
       -5,
@@ -18,8 +18,8 @@
     ]
   },
   {
-    "name": "POST_V2P_constant",
-    "file": "POST_V2P_constant.wav",
+    "name": "V2P_constant",
+    "file": "V2P_constant.wav",
     "mode": "V2P",
     "domain": [
       -5,
@@ -27,8 +27,26 @@
     ]
   },
   {
-    "name": "POST_V2P_exp_up",
-    "file": "POST_V2P_exp_up.wav",
+    "name": "V2P_linear_pos_fast",
+    "file": "V2P_linear_pos_fast.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "V2P_linear_neg_slow",
+    "file": "V2P_linear_neg_slow.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "V2P_exponential_fast",
+    "file": "V2P_exponential_fast.wav",
     "mode": "V2P",
     "domain": [
       -4,
@@ -36,17 +54,8 @@
     ]
   },
   {
-    "name": "POST_V2P_exp_decay",
-    "file": "POST_V2P_exp_decay.wav",
-    "mode": "V2P",
-    "domain": [
-      -4,
-      4
-    ]
-  },
-  {
-    "name": "POST_S2P_linear_const",
-    "file": "POST_S2P_linear_const.wav",
+    "name": "S2P_linear_constant_slope",
+    "file": "S2P_linear_constant_slope.wav",
     "mode": "S2P",
     "domain": [
       -5,
@@ -54,8 +63,8 @@
     ]
   },
   {
-    "name": "POST_S2P_quad_up",
-    "file": "POST_S2P_quad_up.wav",
+    "name": "S2P_quadratic_concave_up",
+    "file": "S2P_quadratic_concave_up.wav",
     "mode": "S2P",
     "domain": [
       0,
@@ -63,8 +72,8 @@
     ]
   },
   {
-    "name": "POST_S2P_sqrt_down",
-    "file": "POST_S2P_sqrt_down.wav",
+    "name": "S2P_sqrt_concave_down",
+    "file": "S2P_sqrt_concave_down.wav",
     "mode": "S2P",
     "domain": [
       0.1,
@@ -72,8 +81,8 @@
     ]
   },
   {
-    "name": "POST_S2P_log_down",
-    "file": "POST_S2P_log_down.wav",
+    "name": "S2P_log_concave_down",
+    "file": "S2P_log_concave_down.wav",
     "mode": "S2P",
     "domain": [
       0.1,
@@ -81,17 +90,8 @@
     ]
   },
   {
-    "name": "POST_S2P_logistic_peak",
-    "file": "POST_S2P_logistic_peak.wav",
-    "mode": "S2P",
-    "domain": [
-      -4,
-      4
-    ]
-  },
-  {
-    "name": "POST_S2P_cubic_pos",
-    "file": "POST_S2P_cubic_pos.wav",
+    "name": "S2P_cubic_concave_up",
+    "file": "S2P_cubic_concave_up.wav",
     "mode": "S2P",
     "domain": [
       0,
@@ -99,8 +99,8 @@
     ]
   },
   {
-    "name": "POST_S2P_cubic_neg",
-    "file": "POST_S2P_cubic_neg.wav",
+    "name": "S2P_cubic_concave_down",
+    "file": "S2P_cubic_concave_down.wav",
     "mode": "S2P",
     "domain": [
       -2,
@@ -108,30 +108,66 @@
     ]
   },
   {
-    "name": "POST_S2P_piece_up_flat",
-    "file": "POST_S2P_piece_up_flat.wav",
+    "name": "PRAC_V2P_linear_pos_very_gentle",
+    "file": "PRAC_V2P_linear_pos_very_gentle.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRAC_V2P_linear_neg_very_steep",
+    "file": "PRAC_V2P_linear_neg_very_steep.wav",
+    "mode": "V2P",
+    "domain": [
+      -5,
+      5
+    ]
+  },
+  {
+    "name": "PRAC_V2P_exponential_slow",
+    "file": "PRAC_V2P_exponential_slow.wav",
+    "mode": "V2P",
+    "domain": [
+      -4,
+      4
+    ]
+  },
+  {
+    "name": "PRAC_V2P_exponential_decay",
+    "file": "PRAC_V2P_exponential_decay.wav",
+    "mode": "V2P",
+    "domain": [
+      -4,
+      4
+    ]
+  },
+  {
+    "name": "PRAC_S2P_quadratic_shifted",
+    "file": "PRAC_S2P_quadratic_shifted.wav",
     "mode": "S2P",
     "domain": [
-      0,
-      2
+      -1,
+      3
     ]
   },
   {
-    "name": "POST_V2P_lin_inc_gentler",
-    "file": "POST_V2P_lin_inc_gentler.wav",
-    "mode": "V2P",
+    "name": "PRAC_S2P_log_wider",
+    "file": "PRAC_S2P_log_wider.wav",
+    "mode": "S2P",
     "domain": [
-      -5,
+      0.5,
       5
     ]
   },
   {
-    "name": "POST_V2P_lin_dec_steeper",
-    "file": "POST_V2P_lin_dec_steeper.wav",
-    "mode": "V2P",
+    "name": "PRAC_S2P_logistic",
+    "file": "PRAC_S2P_logistic.wav",
+    "mode": "S2P",
     "domain": [
-      -5,
-      5
+      -4,
+      4
     ]
   }
 ]
