@@ -8,8 +8,8 @@
   <style>
     :root{
       --page-w: 1000px;
-      --fig-w: 820;   /* logical SVG width (viewBox) */
-      --fig-h: 480;   /* logical SVG height (viewBox) */
+      --fig-w: 820;
+      --fig-h: 480;
     }
     body{
       font-family: system-ui, Segoe UI, Helvetica, Arial, sans-serif;
@@ -48,7 +48,7 @@
     .mini{ font-size:1rem; color:#333; margin:.35rem 0 }
     .em{ font-weight:600 }
 
-    /* Teacher notes toggle */
+    /* Teacher notes  */
     .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
     .btn{
       padding:.45rem .8rem;border:1px solid #bbb;border-radius:10px;background:#f5f5f5;cursor:pointer;
@@ -58,7 +58,7 @@
     body.show-notes .tnote{display:block}
     .tnote .codes{margin:.4rem 0 0}
 
-    /* Home button */
+    /* Home */
     .homebar{display:flex;justify-content:flex-start;align-items:center;margin:8px 0 12px}
     .homebtn{
       display:inline-block;padding:.5rem .9rem;border:1px solid #bbb;border-radius:10px;
@@ -164,7 +164,7 @@
   </div>
 
   <script>
-  /* ---------- Teacher-notes toggle ---------- */
+  /*  Teacher-notes toggle */
   (function(){
     const key = "hf_show_notes";
     const body = document.body;
@@ -175,7 +175,6 @@
     });
   })();
 
-  /* ---------- plotting helpers ---------- */
   function sampleY(fn, domain, N=400){
     const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
     const ys=xs.map(fn);
@@ -224,7 +223,7 @@
     container.appendChild(wrap);
   }
 
-  /* ---------- examples (match your PRAC_*.wav filenames) ---------- */
+  /* Examples */
   const V2P = [
     {
       id:"PRAC_V2P_linear_pos_very_gentle", label:"Line going up (gentle)",
@@ -336,7 +335,6 @@
     },
   ];
 
-  /* ---------- render ---------- */
   function makeCard(entry, mapping, mount){
     const card=document.createElement("div"); card.className="card";
     const head=document.createElement("div"); head.className="head";

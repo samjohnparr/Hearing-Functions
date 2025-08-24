@@ -55,7 +55,7 @@
   <div id="app"></div>
 
   <script>
-  /* ======= CONFIG: 15-item Posttest (Form B) ======= */
+
   const PROMPTS = [
     // --- V2P ---
     { id:"V2P_linear_pos_fast",   src:"audio/V2P_linear_pos_fast.wav",   correct:"g_lin_pos_fast" },
@@ -99,7 +99,6 @@
 
   const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
 
-  /* ======= Seeded RNG ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -141,7 +140,6 @@
     return arr;
   }
 
-  /* ======= Plot helpers ======= */
   function sampleY(fn, domain, N=200){
     const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
     const ys=xs.map(fn);
@@ -181,7 +179,6 @@
     el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
   }
 
-  /* ======= PID helpers ======= */
   function wirePIDPersistence(){
     const inp = document.getElementById('pid');
     if (!inp) return;
@@ -202,7 +199,6 @@
     try { return (localStorage.getItem('hf_pid')||'').trim(); } catch(e){ return ''; }
   }
 
-  /* ======= APP ======= */
   (function init(){
     wirePIDPersistence();
 
@@ -353,7 +349,6 @@
       out.textContent=""; btnCSV.style.display="none"; updateEnable();
     });
 
-    /* ======= EXIT SLIP (kept) ======= */
     const exitSec = document.createElement("div");
     exitSec.className = "section";
     exitSec.innerHTML = `

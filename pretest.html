@@ -54,8 +54,7 @@
   <div id="app"></div>
 
   <script>
-  /* ======= CONFIG: 15-item Pretest (Form A) ======= */
-  // Use the filenames you generated in Colab; swap freely if you prefer other clips.
+
   const PROMPTS = [
     // --- V2P (value -> pitch) ---
     { id:"V2P_linear_pos_slow",   src:"audio/V2P_linear_pos_slow.wav",   correct:"g_lin_pos_slow" },
@@ -102,7 +101,6 @@
   // Letters auto-derive from figure count (A–O for 15)
   const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
 
-  /* ======= Seeded RNG ======= */
   function cyrb128(str){
     let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
     for (let i=0, k; i<str.length; i++) {
@@ -144,7 +142,6 @@
     return arr;
   }
 
-  /* ======= Plot helpers ======= */
   function sampleY(fn, domain, N=200){
     const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
     const ys=xs.map(fn);
@@ -175,7 +172,6 @@
     el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
   }
 
-  /* ======= PID helpers ======= */
   function wirePIDPersistence(){
     const inp = document.getElementById('pid');
     if (!inp) return;
@@ -196,7 +192,6 @@
     try { return (localStorage.getItem('hf_pid')||'').trim(); } catch(e){ return ''; }
   }
 
-  /* ======= APP ======= */
   (function init(){
     wirePIDPersistence();
 
