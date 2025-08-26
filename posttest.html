@@ -15,7 +15,8 @@
     .label{ font-weight:600 }
     .legend{ margin:-6px 0 10px; color:#444; font-size:.95rem }
     .maptag{ display:inline-block; margin:0 .35rem 0 .5rem; font-size:.78rem; border:1px solid #b9cdf9; background:#e8eefc; border-radius:8px; padding:2px 8px }
-    .figs{ display:grid; grid-template-columns:repeat(5, minmax(var(--w), 1fr)); gap:12px }
+    /* 3×3 figure grid */
+    .figs{ display:grid; grid-template-columns:repeat(3, minmax(var(--w), 1fr)); gap:12px }
     .fig{ position:relative; border:1px solid #ddd; border-radius:10px; background:white; padding:8px }
     .badge{ position:absolute; left:8px; top:8px; background:#333; color:#fff; border-radius:8px; padding:2px 8px; font-size:.8rem }
     svg{ width:100%; height:auto; max-width:var(--w); max-height:var(--h); display:block; margin:0 auto }
@@ -42,7 +43,7 @@
     <span class="maptag" title="Value → Pitch">V2P</span> pitch tracks height.
     <span class="maptag" title="Slope → Pitch">S2P</span> pitch tracks slope (rate of change).
   </p>
-  <p class="muted">Choose the letter of the figure (A–O) that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
+  <p class="muted">This form has <strong>9 items</strong>. Choose the letter of the figure <strong>(A–I)</strong> that matches each sound. All clips share the same timbre/range/tempo (sine, 40 steps, 0.20 s/step, 0.02 s gaps, 220–880 Hz).</p>
 
   <!-- Optional participant code -->
   <div class="muted" style="margin:10px 0 14px">
@@ -55,210 +56,134 @@
   <div id="app"></div>
 
   <script>
+  // ===== 9-ITEM POSTTEST =====
   const PROMPTS = [
-    // --- V2P ---
-    { id:"V2P_linear_pos_fast",   src:"audio/V2P_linear_pos_fast.wav",   correct:"g_lin_pos_fast" },
+    // --- V2P (simple, no near-duplicates)
     { id:"V2P_linear_neg_slow",   src:"audio/V2P_linear_neg_slow.wav",   correct:"g_lin_neg_slow" },
-    { id:"V2P_exponential_fast",  src:"audio/V2P_exponential_fast.wav",  correct:"g_exp_up" },
-    { id:"V2P_linear_pos_slow",   src:"audio/V2P_linear_pos_slow.wav",   correct:"g_lin_pos_slow" },
-    { id:"PRAC_V2P_linear_pos_very_gentle", src:"audio/PRAC_V2P_linear_pos_very_gentle.wav", accept:["g_lin_pos_slow"] },
-    { id:"PRAC_V2P_exponential_slow",       src:"audio/PRAC_V2P_exponential_slow.wav",       accept:["g_exp_up"] },
-    { id:"PRAC_V2P_exponential_decay",      src:"audio/PRAC_V2P_exponential_decay.wav",      correct:"g_exp_decay" },
+    { id:"V2P_constant",          src:"audio/V2P_constant.wav",          correct:"g_const" },
+    { id:"PRAC_V2P_exponential_slow", src:"audio/PRAC_V2P_exponential_slow.wav", accept:["g_exp_up"] },
 
-    // --- S2P ---
-    { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", accept:["g_linear","g_const"] },
-    { id:"S2P_quadratic_concave_up",  src:"audio/S2P_quadratic_concave_up.wav",  correct:"g_quad" },
+    // --- S2P
+    { id:"S2P_linear_constant_slope", src:"audio/S2P_linear_constant_slope.wav", accept:["g_linear"] },
     { id:"PRAC_S2P_quadratic_shifted",src:"audio/PRAC_S2P_quadratic_shifted.wav",accept:["g_quad","g_quad_shift"] },
     { id:"S2P_log_concave_down",      src:"audio/S2P_log_concave_down.wav",      correct:"g_log_mir" },
-    { id:"PRAC_S2P_log_wider",        src:"audio/PRAC_S2P_log_wider.wav",        accept:["g_log_mir"] },
-    { id:"S2P_cubic_concave_up",      src:"audio/S2P_cubic_concave_up.wav",      correct:"g_cubic_pos" },
     { id:"S2P_cubic_concave_down",    src:"audio/S2P_cubic_concave_down.wav",    correct:"g_cubic_neg" },
     { id:"PRAC_S2P_logistic",         src:"audio/PRAC_S2P_logistic.wav",         correct:"g_logistic" },
+    { id:"S2P_sqrt_concave_down",     src:"audio/S2P_sqrt_concave_down.wav",     correct:"g_sqrt_mir" },
   ];
 
-  // Same 15-figure panel as Pretest (keeps the task isomorphic)
+  // ---- ONLY 9 FIGURES (A–I) ----
   const FIGURES = [
-    { id:"g_lin_pos_slow", fn:(x)=>0.20*x,  domain:[-5,5], caption:"y = 0.2x [V2P]" },
-    { id:"g_lin_pos_fast", fn:(x)=>1.20*x,  domain:[-5,5], caption:"y = 1.2x [V2P]" },
     { id:"g_lin_neg_slow", fn:(x)=>-0.20*x, domain:[-5,5], caption:"y = -0.2x [V2P]" },
-    { id:"g_lin_neg_fast", fn:(x)=>-1.20*x, domain:[-5,5], caption:"y = -1.2x [V2P]" },
     { id:"g_const",        fn:(x)=>2.0,     domain:[-5,5], caption:"y = 2 [V2P]" },
     { id:"g_exp_up",       fn:(x)=>Math.pow(2, x/1.5), domain:[-4,4], caption:"y = 2^(x/1.5) [V2P]" },
-    { id:"g_exp_decay",    fn:(x)=>Math.pow(2, -x/1.8),domain:[-4,4], caption:"y = 2^(-x/1.8) [V2P]" },
-
     { id:"g_linear",    fn:(x)=>0.6*x,                         domain:[-5,5], caption:"linear (slope constant) [S2P]" },
     { id:"g_quad",      fn:(x)=>x*x,                           domain:[0,4],  caption:"y = x² on [0,4] [S2P]" },
-    { id:"g_sqrt_mir",  fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x [S2P]" },
     { id:"g_log_mir",   fn:(x)=>-Math.log(Math.max(1e-6,x)),   domain:[0.1,4],caption:"y = -log x [S2P]" },
-    { id:"g_cubic_pos", fn:(x)=>x**3,                          domain:[0,2],  caption:"y = x³ on [0,2] [S2P]" },
     { id:"g_cubic_neg", fn:(x)=>x**3,                          domain:[-2,0], caption:"y = x³ on [-2,0] [S2P]" },
     { id:"g_logistic",  fn:(x)=>1/(1+Math.exp(-x)),            domain:[-4,4], caption:"logistic [S2P]" },
-    { id:"g_quad_shift",fn:(x)=>(x-1)**2,                      domain:[-1,3], caption:"y = (x-1)² [S2P]" },
+    { id:"g_sqrt_mir",  fn:(x)=>-Math.sqrt(Math.max(1e-9,x)),  domain:[0.1,4],caption:"y = -√x [S2P]" },
   ];
 
+  // Letters A–I
   const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
 
-  function cyrb128(str){
-    let h1=1779033703, h2=3144134277, h3=1013904242, h4=2773480762;
-    for (let i=0, k; i<str.length; i++) {
-      k = str.charCodeAt(i);
-      h1 = h2 ^ Math.imul(h1 ^ k, 597399067);
-      h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
-      h3 = h4 ^ Math.imul(h3 ^ k, 951274213);
-      h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
-    }
-    h1 = Math.imul(h3 ^ (h1>>>18), 597399067);
-    h2 = Math.imul(h4 ^ (h2>>>22), 2869860233);
-    h3 = Math.imul(h1 ^ (h3>>>17), 951274213);
-    h4 = Math.imul(h2 ^ (h4>>>19), 2716044179);
-    return [(h1^h2^h3^h4)>>>0, (h2^h1)>>>0, (h3^h1)>>>0, (h4^h1)>>>0];
-  }
-  function sfc32(a,b,c,d){
-    return function(){
-      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
-      let t = (a + b) | 0;
-      a = b ^ (b >>> 9);
-      b = c + (c << 3) | 0;
-      c = (c << 21 | c >>> 11);
-      d = d + 1 | 0;
-      t = t + d | 0;
-      c = c + t | 0;
-      return (t >>> 0) / 4294967296;
-    }
-  }
-  function makeRng(tag){
-    const seedStr = new URLSearchParams(location.search).get('seed') || 'default-seed';
-    const [a,b,c,d] = cyrb128(seedStr + '|' + tag);
-    return sfc32(a,b,c,d);
-  }
-  function shuffleInPlace(arr, rnd){
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(rnd() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-
-  function sampleY(fn, domain, N=200){
-    const [x0,x1]=domain, xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));
-    const ys=xs.map(fn);
-    let ymin=Math.min(...ys), ymax=Math.max(...ys);
-    if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}
-    if(ymax-ymin<1e-6){ymax=ymin+1;}
-    const pad=0.1*(ymax-ymin);
-    return {xs, ys, ymin:ymin-pad, ymax:ymax+pad};
-  }
-  const mapX=(x,a,b,W)=> (x-a)/(b-a)*W;
-  const mapY=(y,a,b,H)=> H-(y-a)/(b-a)*H;
-
-  function drawGraph(el, fn, domain, caption){
-    const W=160, H=120, NS="http://www.w3.org/2000/svg";
+  // RNG & helpers (seeded)
+  function cyrb128(str){let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;for(let i=0,k;i<str.length;i++){k=str.charCodeAt(i);h1=h2^Math.imul(h1^k,597399067);h2=h3^Math.imul(h2^k,2869860233);h3=h4^Math.imul(h3^k,951274213);h4=h1^Math.imul(h4^k,2716044179);}h1=Math.imul(h3^(h1>>>18),597399067);h2=Math.imul(h4^(h2>>>22),2869860233);h3=Math.imul(h1^(h3>>>17),951274213);h4=Math.imul(h2^(h4>>>19),2716044179);return [(h1^h2^h3^h4)>>>0,(h2^h1)>>>0,(h3^h1)>>>0,(h4^h1)>>>0];}
+  function sfc32(a,b,c,d){return function(){a>>>=0;b>>>=0;c>>>=0;d>>>=0;let t=(a+b)|0;a=b^(b>>>9);b=c+(c<<3)|0;c=(c<<21|c>>>11);d=d+1|0;t=t+d|0;c=c+t|0;return (t>>>0)/4294967296;}}
+  function makeRng(tag){const seedStr=new URLSearchParams(location.search).get('seed')||'PNHS9';const [a,b,c,d]=cyrb128(seedStr+'|'+tag);return sfc32(a,b,c,d);}
+  function shuffleInPlace(arr,rnd){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+  function sampleY(fn,domain,N=200){const [x0,x1]=domain,xs=[...Array(N)].map((_,i)=>x0+(x1-x0)*i/(N-1));const ys=xs.map(fn);let ymin=Math.min(...ys),ymax=Math.max(...ys);if(!isFinite(ymin)||!isFinite(ymax)){ymin=-1;ymax=1;}if(ymax-ymin<1e-6){ymax=ymin+1;}const pad=0.1*(ymax-ymin);return {xs,ys,ymin:ymin-pad,ymax:ymax+pad};}
+  const mapX=(x,a,b,W)=>(x-a)/(b-a)*W; const mapY=(y,a,b,H)=>H-(y-a)/(b-a)*H;
+  function drawGraph(el,fn,domain,caption){
+    const W=160,H=120,NS="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
-    const {xs,ys,ymin,ymax}=sampleY(fn, domain, 200);
-    if(domain[0]<=0 && domain[1]>=0){
+    const {xs,ys,ymin,ymax}=sampleY(fn,domain,200);
+    if(domain[0]<=0&&domain[1]>=0){
       const x0=mapX(0,domain[0],domain[1],W);
-      const l=document.createElementNS(NS,"line");
-      l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H);
-      l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+      const l=document.createElementNS(NS,"line"); l.setAttribute("x1",x0); l.setAttribute("x2",x0); l.setAttribute("y1",0); l.setAttribute("y2",H); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
     }
-    if(ymin<=0 && ymax>=0){
+    if(ymin<=0&&ymax>=0){
       const y0=mapY(0,ymin,ymax,H);
-      const l=document.createElementNS(NS,"line");
-      l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0);
-      l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
+      const l=document.createElementNS(NS,"line"); l.setAttribute("x1",0); l.setAttribute("x2",W); l.setAttribute("y1",y0); l.setAttribute("y2",y0); l.setAttribute("stroke","#bbb"); l.setAttribute("stroke-width","1"); svg.appendChild(l);
     }
-    let d=""; for(let i=0;i<xs.length;i++){
-      const X=mapX(xs[i],domain[0],domain[1],W), Y=mapY(ys[i],ymin,ymax,H);
-      d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);
-    }
-    const path=document.createElementNS(NS,"path");
-    path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2");
-    svg.appendChild(path);
+    let d=""; for(let i=0;i<xs.length;i++){const X=mapX(xs[i],domain[0],domain[1],W),Y=mapY(ys[i],ymin,ymax,H); d+=(i?` L ${X} ${Y}`:`M ${X} ${Y}`);}
+    const path=document.createElementNS(NS,"path"); path.setAttribute("d",d); path.setAttribute("fill","none"); path.setAttribute("stroke","#222"); path.setAttribute("stroke-width","2"); svg.appendChild(path);
     const cap=document.createElement("div"); cap.className="muted"; cap.style.textAlign="center"; cap.style.marginTop="4px"; cap.textContent=caption||"";
     el.innerHTML=""; el.appendChild(svg); el.appendChild(cap);
   }
 
   function wirePIDPersistence(){
-    const inp = document.getElementById('pid');
-    if (!inp) return;
-    try {
-      const saved = localStorage.getItem('hf_pid') || '';
-      if (saved && !inp.value) inp.value = saved;
-    } catch(e){}
-    inp.addEventListener('change', ()=>{
-      const v = (inp.value||'').trim();
-      try { if (v) localStorage.setItem('hf_pid', v); } catch(e){}
-    });
+    const inp=document.getElementById('pid'); if(!inp) return;
+    try{const saved=localStorage.getItem('hf_pid')||''; if(saved && !inp.value) inp.value=saved;}catch(e){}
+    inp.addEventListener('change',()=>{const v=(inp.value||'').trim(); try{if(v) localStorage.setItem('hf_pid',v);}catch(e){}});
   }
   function getPID(){
-    const inp = document.getElementById('pid');
-    if (!inp) return '';
-    const v = (inp.value||'').trim();
-    if (v) return v;
-    try { return (localStorage.getItem('hf_pid')||'').trim(); } catch(e){ return ''; }
+    const inp=document.getElementById('pid'); if(!inp) return '';
+    const v=(inp.value||'').trim(); if(v) return v;
+    try{ return (localStorage.getItem('hf_pid')||'').trim(); }catch(e){ return ''; }
   }
 
   (function init(){
     wirePIDPersistence();
 
-    const rngItems   = makeRng('items');   // shuffle audio order
-    const rngFigures = makeRng('figs');    // shuffle which graph sits under each fixed letter
+    const rngItems=makeRng('items');       // shuffle audio order
+    const rngFigures=makeRng('figs');      // shuffle figure placement
 
     const app=document.getElementById("app");
 
-    // 1) Shuffle audio order (seeded)
-    const items = PROMPTS.map(x=>({...x}));
-    shuffleInPlace(items, rngItems);
+    // Shuffle items
+    const items=PROMPTS.map(x=>({...x}));
+    shuffleInPlace(items,rngItems);
 
-    // 2) Shuffle figure assignment to fixed letters (seeded)
-    const figsShuffled = FIGURES.map(f=>({...f}));
-    shuffleInPlace(figsShuffled, rngFigures);
+    // Shuffle figures and map letters
+    const figsShuffled=FIGURES.map(f=>({...f}));
+    shuffleInPlace(figsShuffled,rngFigures);
 
-    const LETTERS = Array.from({length: FIGURES.length}, (_,i)=>String.fromCharCode(65+i));
-
-    // Map letter <-> figure
-    const letterToFig = {};
-    const letterByFigId = {};
-    const captionByFigId = {};
-    LETTERS.forEach((L, i)=>{
-      const f = figsShuffled[i];
-      letterToFig[L] = f;
-      letterByFigId[f.id] = L;
-      captionByFigId[f.id] = f.caption || "";
+    const letterToFig={}, letterByFigId={}, captionByFigId={};
+    LETTERS.forEach((L,i)=>{
+      const f=figsShuffled[i];
+      letterToFig[L]=f;
+      letterByFigId[f.id]=L;
+      captionByFigId[f.id]=f.caption||"";
     });
 
     const phase="post";
-
     function getAcceptIds(spec){
-      if (Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
-      if (spec.correct) return [spec.correct];
+      if(Array.isArray(spec.accept) && spec.accept.length) return spec.accept;
+      if(spec.correct) return [spec.correct];
       return [];
     }
     function mappingFromId(id){
-      return id.startsWith("V2P") || id.startsWith("PRAC_V2P") ? {short:"V2P", long:"Value→Pitch"} : {short:"S2P", long:"Slope→Pitch"};
+      return id.startsWith("V2P") || id.startsWith("PRAC_V2P")
+        ? {short:"V2P", long:"Value→Pitch"}
+        : {short:"S2P", long:"Slope→Pitch"};
     }
 
-    // Layout containers
+    // Layout
     const sec=document.createElement("div"); sec.className="section"; app.appendChild(sec);
     const grid=document.createElement("div"); grid.className="grid"; sec.appendChild(grid);
-
     const left=document.createElement("div"); left.className="audios"; grid.appendChild(left);
     const right=document.createElement("div"); right.className="figs"; grid.appendChild(right);
 
     // LEFT: audio cards
     const selects=[];
-    items.forEach((it, idx)=>{
+    items.forEach((it,idx)=>{
       const card=document.createElement("div"); card.className="item";
-      const map = mappingFromId(it.id);
+      const map=mappingFromId(it.id);
+
       const title=document.createElement("div");
       title.innerHTML=`<span class="label">Sound ${idx+1}</span><span class="maptag" title="${map.long}">${map.short}</span>`;
+
       const player=document.createElement("audio"); player.controls=true; player.src=it.src; player.style.width="100%";
+
       const sel=document.createElement("select");
-      const selId=`sel_${idx}`; sel.id = selId;
+      const selId=`sel_${idx}`; sel.id=selId;
       sel.innerHTML=`<option value="">Choose figure…</option>` + LETTERS.map(L=>`<option value="${L}">${L}</option>`).join("");
+
       const lab=document.createElement("label"); lab.setAttribute("for", selId); lab.className="muted"; lab.style.display="inline-block"; lab.style.marginTop="6px"; lab.textContent="Choose figure…";
 
-      selects.push({sel, item:it});
+      selects.push({sel,item:it});
       card.appendChild(title);
       card.appendChild(player);
       card.appendChild(document.createElement("br"));
@@ -267,15 +192,15 @@
       left.appendChild(card);
     });
 
-    // RIGHT: fixed A–O grid
+    // RIGHT: 3×3 grid A–I
     LETTERS.forEach(L=>{
-      const f = letterToFig[L];
+      const f=letterToFig[L];
       const box=document.createElement("div"); box.className="fig";
       const badge=document.createElement("div"); badge.className="badge"; badge.textContent=L;
       const plot=document.createElement("div");
       box.appendChild(badge); box.appendChild(plot);
       right.appendChild(box);
-      drawGraph(plot, f.fn, f.domain, f.caption);
+      drawGraph(plot,f.fn,f.domain,f.caption);
     });
 
     // Controls
@@ -294,25 +219,23 @@
       const rows=[["pid","phase","audio_id","chosen_letter","accepted_letters","is_correct","timestamp_iso"]];
 
       selects.forEach((s)=>{
-        const chosen = s.sel.value;
-        const spec = items.find(p=>p.id===s.item.id);
-        const acceptIds = getAcceptIds(spec);
+        const chosen=s.sel.value;
+        const acceptIds=getAcceptIds(s.item);
         const acceptLetters=acceptIds.map(id=>letterByFigId[id]).filter(Boolean);
-        const acceptCaps   =acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
-        const ok = acceptLetters.includes(chosen);
+        const acceptCaps=acceptIds.map(id=>captionByFigId[id]).filter(Boolean);
+        const ok=acceptLetters.includes(chosen);
         if(ok) correct++;
 
         const mark=document.createElement("span");
-        mark.className = ok ? "ok" : "bad";
+        mark.className= ok ? "ok" : "bad";
         mark.style.marginLeft="8px";
-        mark.textContent = ok ? "✔" : "✖";
+        mark.textContent= ok ? "✔" : "✖";
         s.sel.after(mark);
 
-        const ans=document.createElement("div");
-        ans.className="muted answer";
-        const letterText = acceptLetters.join(" or ");
-        const capText    = acceptCaps.join(" / ");
-        ans.textContent  = `Correct: ${letterText}${capText ? " — " + capText : ""}`;
+        const ans=document.createElement("div"); ans.className="muted answer";
+        const letterText=acceptLetters.join(" or ");
+        const capText=acceptCaps.join(" / ");
+        ans.textContent=`Correct: ${letterText}${capText ? " — " + capText : ""}`;
         mark.after(ans);
 
         rows.push([getPID(), phase, s.item.id, chosen, letterText, ok, new Date().toISOString()]);
@@ -324,8 +247,8 @@
 
       btnCSV.style.display="inline-block";
       btnCSV.onclick=()=>{
-        const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
-        const blob=new Blob([csv], {type: "text/csv"});
+        const csv=rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
+        const blob=new Blob([csv], {type:"text/csv"});
         const a=document.createElement("a");
         a.href=URL.createObjectURL(blob);
         a.download=`results_${phase}_${Date.now()}.csv`;
@@ -337,79 +260,48 @@
     btnReset.addEventListener("click", ()=>{
       selects.forEach(s=>{
         s.sel.value=""; s.sel.disabled=false;
-        let n = s.sel.nextSibling;
+        let n=s.sel.nextSibling;
         while(n){
-          const rm = (n.nodeType===1) && (n.classList.contains("ok") || n.classList.contains("bad") || n.classList.contains("answer"));
-          const next = n.nextSibling;
+          const rm=(n.nodeType===1)&&(n.classList.contains("ok")||n.classList.contains("bad")||n.classList.contains("answer"));
+          const next=n.nextSibling;
           if(rm) n.remove();
-          n = next;
+          n=next;
         }
       });
       out.textContent=""; btnCSV.style.display="none"; updateEnable();
     });
 
-    // -------- Exit Slip (with Item 1 rating 1–5) --------
-    const exitSec = document.createElement("div");
-    exitSec.className = "section";
-    exitSec.innerHTML = `
+    // -------- Exit Slip --------
+    const exitSec=document.createElement("div");
+    exitSec.className="section";
+    exitSec.innerHTML=`
       <h2 style="margin:.2rem 0 .4rem">Exit Slip</h2>
-      <p class="muted" style="margin:.1rem 0 10px">
-        Briefly answer the following:
-      </p>
+      <p class="muted" style="margin:.1rem 0 10px">Briefly answer the following:</p>
       <div class="item" style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px">
-        <!-- Item 1: 1–5 helpfulness rating -->
         <div style="margin-bottom:10px">
           <div class="label" id="helpful_label">1) How helpful were the sounds for understanding the graphs today?</div>
           <div class="muted" style="margin:2px 0 6px">(1 = not helpful, 5 = very helpful)</div>
           <div id="helpfulGroup" role="radiogroup" aria-labelledby="helpful_label"
                style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
-              <input type="radio" name="es_helpful" value="1"> 1
-            </label>
-            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
-              <input type="radio" name="es_helpful" value="2"> 2
-            </label>
-            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
-              <input type="radio" name="es_helpful" value="3"> 3
-            </label>
-            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
-              <input type="radio" name="es_helpful" value="4"> 4
-            </label>
-            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
-              <input type="radio" name="es_helpful" value="5"> 5
-            </label>
+            ${[1,2,3,4,5].map(n=>`<label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer"><input type="radio" name="es_helpful" value="${n}"> ${n}</label>`).join('')}
           </div>
         </div>
-
-        <!-- Item 2 -->
         <label for="es_v2p" class="label">2) What did you listen for in V2P?</label>
         <textarea id="es_v2p" rows="3" aria-label="What did you listen for in V2P?"></textarea>
-
-        <!-- Item 3 -->
         <label for="es_s2p" class="label" style="display:block;margin-top:10px">3) What did you listen for in S2P?</label>
         <textarea id="es_s2p" rows="3" aria-label="What did you listen for in S2P?"></textarea>
-
-        <!-- Item 4 -->
         <label for="es_conf" class="label" style="display:block;margin-top:10px">4) What confused you?</label>
         <textarea id="es_conf" rows="3" aria-label="What confused you?"></textarea>
-
         <div class="controls" style="margin-top:10px">
           <button id="btnExitCSV">Download Exit Slip CSV</button>
           <span id="esSaved" class="muted" aria-live="polite"></span>
         </div>
-      </div>
-    `;
+      </div>`;
+
     app.appendChild(exitSec);
 
-    function getStoredPID(){
-      try { return (localStorage.getItem('hf_pid') || '').trim(); }
-      catch(e){ return ''; }
-    }
-
-    function getHelpful(){
-      const checked = exitSec.querySelector('input[name="es_helpful"]:checked');
-      return checked ? checked.value : '';
-    }
+    function getStoredPID(){ try{ return (localStorage.getItem('hf_pid')||'').trim(); }catch(e){ return ''; } }
+    function getHelpful(){ const c=exitSec.querySelector('input[name="es_helpful"]:checked'); return c?c.value:''; }
 
     const es = {
       helpfulRadios: exitSec.querySelectorAll('input[name="es_helpful"]'),
@@ -422,49 +314,38 @@
 
     // restore draft
     try {
-      const key = 'hf_exit_post';
-      const saved = JSON.parse(localStorage.getItem(key) || '{}');
-      if (saved.helpful){
-        const r = exitSec.querySelector(`input[name="es_helpful"][value="${saved.helpful}"]`);
-        if (r) r.checked = true;
-      }
-      if (saved.v2p) es.v2p.value = saved.v2p;
-      if (saved.s2p) es.s2p.value = saved.s2p;
-      if (saved.conf) es.conf.value = saved.conf;
+      const key='hf_exit_post';
+      const saved=JSON.parse(localStorage.getItem(key)||'{}');
+      if(saved.helpful){ const r=exitSec.querySelector(`input[name="es_helpful"][value="${saved.helpful}"]`); if(r) r.checked=true; }
+      if(saved.v2p) es.v2p.value=saved.v2p;
+      if(saved.s2p) es.s2p.value=saved.s2p;
+      if(saved.conf) es.conf.value=saved.conf;
     } catch(e){}
 
     function saveDraft(){
-      try {
-        const key = 'hf_exit_post';
+      try{
+        const key='hf_exit_post';
         localStorage.setItem(key, JSON.stringify({
           helpful: getHelpful(),
           v2p: es.v2p.value,
           s2p: es.s2p.value,
           conf: es.conf.value
         }));
-        es.saved.textContent = 'Draft saved';
-        setTimeout(()=> es.saved.textContent = '', 1200);
-      } catch(e){}
+        es.saved.textContent='Draft saved';
+        setTimeout(()=> es.saved.textContent='', 1200);
+      }catch(e){}
     }
-
-    // Save on any change
-    es.helpfulRadios.forEach(r => r.addEventListener('change', saveDraft));
-    [es.v2p, es.s2p, es.conf].forEach(t => t.addEventListener('input', saveDraft));
+    es.helpfulRadios.forEach(r=>r.addEventListener('change', saveDraft));
+    [es.v2p, es.s2p, es.conf].forEach(t=>t.addEventListener('input', saveDraft));
 
     es.btn.addEventListener('click', ()=>{
-      const pid = getPID() || getStoredPID();
-      const helpful = getHelpful();
-      const v2pAns = (es.v2p.value || '').trim();
-      const s2pAns = (es.s2p.value || '').trim();
-      const confAns = (es.conf.value || '').trim();
-      const timestamp = new Date().toISOString();
-
+      const pid = document.getElementById('pid')?.value.trim() || getStoredPID();
       const rows = [
         ["pid","phase","helpfulness_1to5","v2p_listen","s2p_listen","confusions","timestamp_iso"],
-        [pid, "post", helpful, v2pAns, s2pAns, confAns, timestamp]
+        [pid,"post",getHelpful(),(es.v2p.value||'').trim(),(es.s2p.value||'').trim(),(es.conf.value||'').trim(),new Date().toISOString()]
       ];
       const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
-      const blob = new Blob([csv], {type: "text/csv"});
+      const blob = new Blob([csv], {type:"text/csv"});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = `exit_post_${Date.now()}.csv`;
