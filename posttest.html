@@ -55,7 +55,6 @@
   <div id="app"></div>
 
   <script>
-
   const PROMPTS = [
     // --- V2P ---
     { id:"V2P_linear_pos_fast",   src:"audio/V2P_linear_pos_fast.wav",   correct:"g_lin_pos_fast" },
@@ -349,6 +348,7 @@
       out.textContent=""; btnCSV.style.display="none"; updateEnable();
     });
 
+    // -------- Exit Slip (with Item 1 rating 1–5) --------
     const exitSec = document.createElement("div");
     exitSec.className = "section";
     exitSec.innerHTML = `
@@ -357,13 +357,40 @@
         Briefly answer the following:
       </p>
       <div class="item" style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px">
-        <label for="es_v2p" class="label">What did you listen for in V2P?</label>
+        <!-- Item 1: 1–5 helpfulness rating -->
+        <div style="margin-bottom:10px">
+          <div class="label" id="helpful_label">1) How helpful were the sounds for understanding the graphs today?</div>
+          <div class="muted" style="margin:2px 0 6px">(1 = not helpful, 5 = very helpful)</div>
+          <div id="helpfulGroup" role="radiogroup" aria-labelledby="helpful_label"
+               style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
+              <input type="radio" name="es_helpful" value="1"> 1
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
+              <input type="radio" name="es_helpful" value="2"> 2
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
+              <input type="radio" name="es_helpful" value="3"> 3
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
+              <input type="radio" name="es_helpful" value="4"> 4
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:6px;border:1px solid #bbb;border-radius:8px;padding:4px 10px;cursor:pointer">
+              <input type="radio" name="es_helpful" value="5"> 5
+            </label>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <label for="es_v2p" class="label">2) What did you listen for in V2P?</label>
         <textarea id="es_v2p" rows="3" aria-label="What did you listen for in V2P?"></textarea>
 
-        <label for="es_s2p" class="label" style="display:block;margin-top:10px">What did you listen for in S2P?</label>
+        <!-- Item 3 -->
+        <label for="es_s2p" class="label" style="display:block;margin-top:10px">3) What did you listen for in S2P?</label>
         <textarea id="es_s2p" rows="3" aria-label="What did you listen for in S2P?"></textarea>
 
-        <label for="es_conf" class="label" style="display:block;margin-top:10px">What confused you?</label>
+        <!-- Item 4 -->
+        <label for="es_conf" class="label" style="display:block;margin-top:10px">4) What confused you?</label>
         <textarea id="es_conf" rows="3" aria-label="What confused you?"></textarea>
 
         <div class="controls" style="margin-top:10px">
@@ -378,7 +405,14 @@
       try { return (localStorage.getItem('hf_pid') || '').trim(); }
       catch(e){ return ''; }
     }
+
+    function getHelpful(){
+      const checked = exitSec.querySelector('input[name="es_helpful"]:checked');
+      return checked ? checked.value : '';
+    }
+
     const es = {
+      helpfulRadios: exitSec.querySelectorAll('input[name="es_helpful"]'),
       v2p: exitSec.querySelector('#es_v2p'),
       s2p: exitSec.querySelector('#es_s2p'),
       conf: exitSec.querySelector('#es_conf'),
@@ -390,6 +424,10 @@
     try {
       const key = 'hf_exit_post';
       const saved = JSON.parse(localStorage.getItem(key) || '{}');
+      if (saved.helpful){
+        const r = exitSec.querySelector(`input[name="es_helpful"][value="${saved.helpful}"]`);
+        if (r) r.checked = true;
+      }
       if (saved.v2p) es.v2p.value = saved.v2p;
       if (saved.s2p) es.s2p.value = saved.s2p;
       if (saved.conf) es.conf.value = saved.conf;
@@ -399,24 +437,31 @@
       try {
         const key = 'hf_exit_post';
         localStorage.setItem(key, JSON.stringify({
-          v2p: es.v2p.value, s2p: es.s2p.value, conf: es.conf.value
+          helpful: getHelpful(),
+          v2p: es.v2p.value,
+          s2p: es.s2p.value,
+          conf: es.conf.value
         }));
         es.saved.textContent = 'Draft saved';
         setTimeout(()=> es.saved.textContent = '', 1200);
       } catch(e){}
     }
+
+    // Save on any change
+    es.helpfulRadios.forEach(r => r.addEventListener('change', saveDraft));
     [es.v2p, es.s2p, es.conf].forEach(t => t.addEventListener('input', saveDraft));
 
     es.btn.addEventListener('click', ()=>{
       const pid = getPID() || getStoredPID();
+      const helpful = getHelpful();
       const v2pAns = (es.v2p.value || '').trim();
       const s2pAns = (es.s2p.value || '').trim();
       const confAns = (es.conf.value || '').trim();
       const timestamp = new Date().toISOString();
 
       const rows = [
-        ["pid","phase","v2p_listen","s2p_listen","confusions","timestamp_iso"],
-        [pid, "post", v2pAns, s2pAns, confAns, timestamp]
+        ["pid","phase","helpfulness_1to5","v2p_listen","s2p_listen","confusions","timestamp_iso"],
+        [pid, "post", helpful, v2pAns, s2pAns, confAns, timestamp]
       ];
       const csv = rows.map(r=>r.map(v=>String(v).replaceAll('"','""')).map(v=>`"${v}"`).join(",")).join("\n");
       const blob = new Blob([csv], {type: "text/csv"});
@@ -425,6 +470,7 @@
       a.download = `exit_post_${Date.now()}.csv`;
       a.click();
     });
+    // -------- End Exit Slip --------
   })();
   </script>
 </body>
